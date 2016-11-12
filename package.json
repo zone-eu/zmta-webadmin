@@ -1,0 +1,34 @@
+{
+  "name": "zmta-webadmin",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Web admin component for ZoneMTA",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Andris Reinman",
+  "license": "EUPL-1.1",
+  "dependencies": {
+    "basic-auth": "^1.0.4",
+    "body-parser": "^1.15.2",
+    "compression": "^1.6.2",
+    "config": "^1.21.0",
+    "connect-flash": "^0.1.1",
+    "connect-redis": "^3.1.0",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "express-session": "^1.14.1",
+    "handlebars": "^4.0.5",
+    "hbs": "^4.0.1",
+    "humanize": "0.0.9",
+    "libmime": "^2.1.0",
+    "mailsplit": "^3.1.0",
+    "morgan": "^1.7.0",
+    "npmlog": "^4.0.0",
+    "redis": "^2.6.2",
+    "request": "^2.75.0",
+    "serve-favicon": "^2.3.0"
+  }
+}

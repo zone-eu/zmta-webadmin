@@ -1,0 +1,42 @@
+<h2>Message sent</h2>
+
+<div class="table-responsive" style="margin-top: 10px;">
+
+    <table class="table table-bordered">
+        <tr>
+            <th class="col-md-2">
+                Queue ID
+            </th>
+            <td>
+                <a href="/message/{{message.id}}">{{message.id}}</a>
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                MAIL FROM
+            </th>
+            <td>
+                {{message.from}}
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                RCPT TO
+            </th>
+            <td>
+                {{message.to}}
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                Server response
+            </th>
+            <td>
+                <small>{{message.response}}</small>
+            </td>
+        </tr>
+    </table>
+</div>

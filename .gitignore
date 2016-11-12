@@ -1,0 +1,6 @@
+node_modules
+.DS_Store
+npm-debug.log
+config/production.*
+config/development.*
+*v8.log

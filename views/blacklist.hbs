@@ -1,0 +1,67 @@
+<h2><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Blacklisted addresses</h2>
+
+<p>
+    This page lists all domains which have blacklisted a sending IP address. Entries expire in 6 hours but if the issue is not resolved, the IP gets re-added to this list again.
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover table-condensed">
+
+        <thead>
+
+            <tr>
+                <th class="col-md-1">
+                    #
+                </th>
+
+                <th>
+                    Time
+                </th>
+
+                <th>
+                    IP
+                </th>
+
+                <th>
+                    Domain
+                </th>
+
+                <th>
+                    Message
+                </th>
+
+                <th>
+                    Response
+                </th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {{#each items}}
+                <tr>
+                    <th>
+                        {{index}}
+                    </th>
+                    <td>
+                        {{time}}
+                    </td>
+                    <td>
+                        {{address}}
+                    </td>
+                    <td>
+                        {{domain}}
+                    </td>
+                    <td>
+                        <a href="/message/{{id}}">{{id}}.{{seq}}</a>
+                    </td>
+                    <td>
+                        <small>{{response}}</small>
+                    </td>
+                </tr>
+            {{/each}}
+
+        </tbody>
+    </table>
+</div>
