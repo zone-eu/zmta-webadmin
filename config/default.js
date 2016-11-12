@@ -18,6 +18,7 @@ module.exports = {
         port: 6379,
         db: 2
     },
+    counterPrefix: 'zmta',
     log: {
         level: 'info'
     }
