@@ -2,6 +2,8 @@
 
 Web administration component for [ZoneMTA](https://github.com/zone-eu/zone-mta). Adds a lightweight web based wrapper around ZoneMTA HTTP API calls.
 
+See screenshots [here](https://cloudup.com/c_TLoJ62sdY).
+
 ## Setup
 
 1. Copy these files to the same server where ZoneMTA runs
