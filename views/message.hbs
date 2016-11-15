@@ -62,10 +62,10 @@
                     {{#if meta.user}}
                         <tr>
                             <th>
-                                Protocol
+                                User
                             </th>
                             <td>
-                                {{meta.transtype}}
+                                {{meta.user}}
                             </td>
                         </tr>
                     {{/if}}
@@ -94,6 +94,15 @@
                         </th>
                         <td>
                             {{rcptTo}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>
+                            Message body
+                        </th>
+                        <td>
+                            {{meta.sourceMd5}} ({{#num}}{{meta.bodySize}}{{/num}}B)
                         </td>
                     </tr>
 
