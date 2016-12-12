@@ -1,5 +1,9 @@
 <h2><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <a href="/message/{{meta.id}}">{{meta.id}}</a></h2>
 
+{{#if meta.isDeleted }}
+    <div class="alert alert-danger" role="alert">Message <strong>{{meta.id}}</strong> is already deleted{{#if meta.expiresAfter}} and expires after <strong>{{meta.expiresAfter}}</strong>{{/if}}</div>
+{{/if}}
+
 <div>
 
     <!-- Nav tabs -->
@@ -102,7 +106,8 @@
                             Message body
                         </th>
                         <td>
-                            {{meta.sourceMd5}} ({{#num}}{{meta.bodySize}}{{/num}} bytes)
+                            {{meta.sourceMd5}} (
+                            {{#num}}{{meta.bodySize}}{{/num}} bytes)
                         </td>
                     </tr>
 
@@ -124,14 +129,16 @@
                             </td>
                         </tr>
                     {{/if}}
-                    <tr>
-                        <th>
-                            Actions
-                        </th>
-                        <td>
-                            <button type="submit" form="messages-delete" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button>
-                        </td>
-                    </tr>
+                    {{#if messages}}
+                        <tr>
+                            <th>
+                                Actions
+                            </th>
+                            <td>
+                                <button type="submit" form="messages-delete" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button>
+                            </td>
+                        </tr>
+                    {{/if}}
                 </table>
             </div>
         </div>

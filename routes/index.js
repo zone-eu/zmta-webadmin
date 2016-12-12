@@ -70,7 +70,12 @@ router.get('/message/:id', (req, res, next) => {
         if (err) {
             return next(err);
         }
+
         message.created = new Date(message.meta.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
+
+        if (message.meta.expiresAfter) {
+            message.meta.expiresAfter = new Date(message.meta.expiresAfter).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
+        }
 
         let headers = new mailsplit.Headers(message.meta.headers);
         message.subject = headers.getFirst('subject');

@@ -15,7 +15,6 @@ let flash = require('connect-flash');
 let hbs = require('hbs');
 let compression = require('compression');
 let auth = require('basic-auth');
-let urllib = require('url');
 const humanize = require('humanize');
 
 let routes = require('./routes/index');
