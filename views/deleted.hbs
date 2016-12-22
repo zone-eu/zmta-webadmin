@@ -1,0 +1,46 @@
+<h2><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <a href="/deleted/">Deleted messages</a></h2>
+
+<p>
+    This list includes recently deleted messages. You can see message information but no delivery information about these messages.
+</p>
+
+{{#if items}}
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover table-condensed">
+
+            <thead>
+
+                <tr>
+                    <th class="col-md-1">
+                        #
+                    </th>
+
+                    <th>
+                        ID
+                    </th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {{#each items}}
+                    <tr>
+                        <th>
+                            {{index}}
+                        </th>
+                        <td>
+                            <a href="/message/{{id}}">{{id}}</a>
+                        </td>
+                    </tr>
+                {{/each}}
+
+            </tbody>
+        </table>
+    </div>
+{{else}}
+    <p>
+        Nothing to show here
+    </p>
+{{/if}}

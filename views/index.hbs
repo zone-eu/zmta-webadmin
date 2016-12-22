@@ -44,7 +44,7 @@
                         {{index}}
                     </th>
                     <th>
-                        <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>  <a href="/zone/{{name}}/active">{{name}}</a>
+                        <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <a href="/zone/{{name}}/active">{{name}}</a>
                     </th>
                     <td>
                         <div class="text-right">
@@ -73,6 +73,15 @@
                     </td>
                 </tr>
             {{/each}}
+
+            <tr>
+                <th>
+                    {{lastIndex}}
+                </th>
+                <th colspan="6">
+                    <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <a href="/deleted">Deleted messages</a>
+                </th>
+            </tr>
 
         </tbody>
 
