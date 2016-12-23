@@ -30,7 +30,6 @@ router.get('/', (req, res, next) => {
                         zone.index = i + 1;
                         return zone;
                     }),
-                    lastIndex: zones.length + 1,
                     top,
                     totals,
                     blacklist: blacklist.length
@@ -64,24 +63,6 @@ router.get('/zone/:zone/:type', (req, res, next) => {
             });
         });
     });
-});
-
-router.get('/deleted', (req, res, next) => {
-    handler.fetchQueued('', 'deleted', (err, queue) => {
-        if (err) {
-            return next(err);
-        }
-
-        res.render('deleted', {
-            title: req.params.zone,
-            type: req.params.type,
-            items: queue.list.map((item, i) => {
-                item.index = i + 1;
-                return item;
-            })
-        });
-    });
-
 });
 
 router.get('/message/:id', (req, res, next) => {
