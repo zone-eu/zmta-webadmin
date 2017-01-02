@@ -87,8 +87,6 @@ router.get('/message/:id', (req, res, next) => {
             return data;
         });
 
-        log.info('LOG', JSON.stringify(logEntries));
-
         handler.fetchMessageData(id, (err, message) => {
             if (err) {
                 err.logId = id;
