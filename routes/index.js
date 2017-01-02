@@ -1,6 +1,5 @@
 'use strict';
 
-const log = require('npmlog');
 const express = require('express');
 const router = new express.Router();
 const handler = require('../lib/handler');
@@ -74,8 +73,7 @@ router.get('/message/:id', (req, res, next) => {
             return next(err);
         }
 
-        log.info('LOG', JSON.stringify(logEntries));
-        logEntries = [].concat(logEntries || []).map(entry => {
+        logEntries = [].concat(logEntries && logEntries.entries || []).map(entry => {
             let data = {
                 time: new Date(entry.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC',
                 id: entry.id + (entry.seq ? '.' + entry.seq : ''),
