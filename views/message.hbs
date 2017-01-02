@@ -357,56 +357,62 @@
 
 
 {{#if logEntries}}
-    <h3>Log entries for {{meta.id}}</h3>
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+            <div>
+                Log entries
+            </div>
+        </div>
 
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Date
-                    </th>
-                    <th>
-                        ID
-                    </th>
-                    <th>
-                        Action
-                    </th>
-                    <th>
-                        Data
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each logEntries}}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
                     <tr>
-                        <td class="col-md-2">
-                            {{time}}
-                        </td>
-                        <td>
-                            {{id}}
-                        </td>
-                        <td>
-                            {{action}}
-                        </td>
-                        <td>
-                            <table class="table table-condensed">
-                                {{#each message}}
-                                    <tr>
-                                        <td>
-                                            {{key}}
-                                        </td>
-                                        <td>
-                                            {{value}}
-                                        </td>
-                                    </tr>
-                                {{/each}}
-                            </table>
-                        </td>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                        <th>
+                            Data
+                        </th>
                     </tr>
-                {{/each}}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {{#each logEntries}}
+                        <tr>
+                            <td class="col-md-2">
+                                {{time}}
+                            </td>
+                            <td>
+                                {{id}}
+                            </td>
+                            <td>
+                                {{action}}
+                            </td>
+                            <td>
+                                <table class="table table-condensed">
+                                    {{#each message}}
+                                        <tr>
+                                            <td>
+                                                {{key}}
+                                            </td>
+                                            <td>
+                                                {{value}}
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                </table>
+                            </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
     </div>
-
 {{/if}}
