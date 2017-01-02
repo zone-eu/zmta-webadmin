@@ -1,5 +1,6 @@
 'use strict';
 
+const log = require('npmlog');
 const express = require('express');
 const router = new express.Router();
 const handler = require('../lib/handler');
@@ -82,6 +83,8 @@ router.get('/message/:id', (req, res, next) => {
             };
             return data;
         });
+
+        log.info('LOG', JSON.stringify(logEntries));
 
         handler.fetchMessageData(id, (err, message) => {
             if (err) {
