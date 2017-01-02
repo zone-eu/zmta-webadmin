@@ -1,6 +1,50 @@
 <h2>{{message}}</h2>
 
-<p>{{error.status}}</>
+<p>{{error.status}}</p>
 {{#if error.errorStack}}
     <pre>{{error.errorStack}}</pre>
+{{/if}}
+
+{{#if error.logEntries}}
+    <h3>Log entries for {{logId}}</h3>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Data
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each logEntry}}
+                    <tr>
+                        <td>
+                            <code>{{time}}</code>
+                        </td>
+                        <td>
+                            <code>{{id}}</code>
+                        </td>
+                        <td>
+                            <code>{{action}}</code>
+                        </td>
+                        <td>
+                            <code>{{data}}</code>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
 {{/if}}

@@ -21,5 +21,6 @@ module.exports = {
     counterPrefix: 'zmta',
     log: {
         level: 'info'
-    }
+    },
+    logServer: 'http://localhost:5388'
 };

@@ -66,68 +66,89 @@ router.get('/zone/:zone/:type', (req, res, next) => {
 });
 
 router.get('/message/:id', (req, res, next) => {
-    handler.fetchMessageData(req.params.id, (err, message) => {
+    let id = (req.params.id || '').toString().replace(/\.[\w]{3}$/, '').trim();
+
+    handler.fetchLogData(req.params.id, (err, logEntries) => {
         if (err) {
             return next(err);
         }
 
-        message.created = new Date(message.meta.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
-
-        if (message.meta.expiresAfter) {
-            message.meta.expiresAfter = new Date(message.meta.expiresAfter).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
-        }
-
-        let headers = new mailsplit.Headers(message.meta.headers);
-        message.subject = headers.getFirst('subject');
-        try {
-            message.subject = libmime.decodeWords(message.subject);
-        } catch (E) {
-            // ignore
-        }
-
-        if (message.meta.spam && message.meta.spam.default) {
-            message.spamStatus = true;
-            switch (message.meta.spam.default.action) {
-                case 'no action':
-                    message.spamLabel = 'success';
-                    message.spamText = 'Clean';
-                    break;
-                case 'reject':
-                    message.spamLabel = 'danger';
-                    message.spamText = 'Spam';
-                    break;
-                default:
-                    message.spamLabel = 'warning';
-                    message.spamText = (message.meta.spam.default.action || '').replace(/^\w/, c => c.toUpperCase());
-            }
-            message.spamScore = (Number(message.meta.spam.default.score) || 0).toFixed(2);
-            message.spamTests = message.meta.spam.tests.join(', ');
-        }
-
-        message.mailFrom = message.meta.from || '<>';
-        message.rcptTo = [].concat(message.meta.to || []).join(', ');
-
-        message.headers = headers.build();
-        message.size = message.headers.length + message.meta.bodySize;
-        message.headers = message.headers.toString().replace(/\r/g, '').trim();
-
-        message.messages = message.messages.map((entry, i) => {
-            entry.index = i + 1;
-
-            if (entry.deferred) {
-                entry.label = 'warning';
-                entry.nextAttempt = new Date(entry.deferred.next).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
-                entry.serverResponse = entry.deferred.response;
-                entry.smtpLog = entry.deferred.log && entry.deferred.log.length || false;
-            } else {
-                entry.label = 'success';
-                entry.nextAttempt = 'N/A';
-                entry.serverResponse = 'N/A';
-            }
-            return entry;
+        logEntries = (logEntries || []).map(entry => {
+            let data = {
+                time: new Date(entry.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC',
+                id: entry.id + (entry.seq ? '.' + entry.seq : ''),
+                action: entry.action,
+                message: Object.keys(entry).filter(key => !['time', 'id', 'seq', 'action'].includes(key)).map(key => key + '=' + JSON.stringify(entry[key])).join(' ')
+            };
+            return data;
         });
 
-        res.render('message', message);
+        handler.fetchMessageData(id, (err, message) => {
+            if (err) {
+                err.logId = id;
+                err.logEntries = logEntries;
+                return next(err);
+            }
+
+            message.logEntries = logEntries;
+            message.created = new Date(message.meta.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
+
+            if (message.meta.expiresAfter) {
+                message.meta.expiresAfter = new Date(message.meta.expiresAfter).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
+            }
+
+            let headers = new mailsplit.Headers(message.meta.headers);
+            message.subject = headers.getFirst('subject');
+            try {
+                message.subject = libmime.decodeWords(message.subject);
+            } catch (E) {
+                // ignore
+            }
+
+            if (message.meta.spam && message.meta.spam.default) {
+                message.spamStatus = true;
+                switch (message.meta.spam.default.action) {
+                    case 'no action':
+                        message.spamLabel = 'success';
+                        message.spamText = 'Clean';
+                        break;
+                    case 'reject':
+                        message.spamLabel = 'danger';
+                        message.spamText = 'Spam';
+                        break;
+                    default:
+                        message.spamLabel = 'warning';
+                        message.spamText = (message.meta.spam.default.action || '').replace(/^\w/, c => c.toUpperCase());
+                }
+                message.spamScore = (Number(message.meta.spam.default.score) || 0).toFixed(2);
+                message.spamTests = message.meta.spam.tests.join(', ');
+            }
+
+            message.mailFrom = message.meta.from || '<>';
+            message.rcptTo = [].concat(message.meta.to || []).join(', ');
+
+            message.headers = headers.build();
+            message.size = message.headers.length + message.meta.bodySize;
+            message.headers = message.headers.toString().replace(/\r/g, '').trim();
+
+            message.messages = message.messages.map((entry, i) => {
+                entry.index = i + 1;
+
+                if (entry.deferred) {
+                    entry.label = 'warning';
+                    entry.nextAttempt = new Date(entry.deferred.next).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
+                    entry.serverResponse = entry.deferred.response;
+                    entry.smtpLog = entry.deferred.log && entry.deferred.log.length || false;
+                } else {
+                    entry.label = 'success';
+                    entry.nextAttempt = 'N/A';
+                    entry.serverResponse = 'N/A';
+                }
+                return entry;
+            });
+
+            res.render('message', message);
+        });
     });
 });
 
@@ -159,8 +180,7 @@ router.get('/fetch/:id', (req, res) => {
 });
 
 router.post('/find', (req, res) => {
-    let id = (req.body.id || '').toString().replace(/\.[\w]{3}$/, '').trim();
-    return res.redirect('/message/' + id);
+    res.redirect('/message/' + req.body.id);
 });
 
 router.get('/send', (req, res) => {
