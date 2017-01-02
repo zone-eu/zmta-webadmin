@@ -1,5 +1,6 @@
 'use strict';
 
+const log = require('npmlog');
 const express = require('express');
 const router = new express.Router();
 const handler = require('../lib/handler');
