@@ -356,8 +356,8 @@
 {{/if}}
 
 
-{{#if error.logEntries}}
-    <h3>Log entries for {{logId}}</h3>
+{{#if logEntries}}
+    <h3>Log entries for {{meta.id}}</h3>
 
     <div class="table-responsive">
         <table class="table">
@@ -378,19 +378,30 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each logEntry}}
+                {{#each logEntries}}
                     <tr>
-                        <td>
-                            <code>{{time}}</code>
+                        <td class="col-md-2">
+                            {{time}}
                         </td>
                         <td>
-                            <code>{{id}}</code>
+                            {{id}}
                         </td>
                         <td>
-                            <code>{{action}}</code>
+                            {{action}}
                         </td>
                         <td>
-                            <code>{{data}}</code>
+                            <table class="table table-condensed">
+                                {{#each message}}
+                                    <tr>
+                                        <td>
+                                            {{key}}
+                                        </td>
+                                        <td>
+                                            {{value}}
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            </table>
                         </td>
                     </tr>
                 {{/each}}
