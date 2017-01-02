@@ -30,23 +30,23 @@
                 {{#each error.logEntries}}
                     <tr>
                         <td class="col-md-1">
-                            <code>{{time}}</code>
+                            {{time}}
                         </td>
                         <td>
-                            <code>{{id}}</code>
+                            {{id}}
                         </td>
                         <td>
-                            <code>{{action}}</code>
+                            {{action}}
                         </td>
                         <td>
-                            <table class="table">
+                            <table class="table table-condensed">
                                 {{#each message}}
                                     <tr>
                                         <td>
-                                            <code>{{key}}</code>
+                                            {{key}}
                                         </td>
                                         <td>
-                                            <code>{{value}}</code>
+                                            {{value}}
                                         </td>
                                     </tr>
                                 {{/each}}
