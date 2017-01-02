@@ -361,7 +361,10 @@
         <!-- Default panel contents -->
         <div class="panel-heading">
             <div>
-                Log entries for {{meta.id}}
+                Log entries for {{logId}}
+                {{#if logSeq}}
+                    <span class="label label-default">{{logSeq}}</span> (<a href="/message/{{logId}}">clear filter</a>).
+                {{/if}}
             </div>
         </div>
 
