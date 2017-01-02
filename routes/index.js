@@ -73,7 +73,8 @@ router.get('/message/:id', (req, res, next) => {
             return next(err);
         }
 
-        logEntries = (logEntries || []).map(entry => {
+        log.info('LOG', JSON.stringify(logEntries));
+        logEntries = [].concat(logEntries || []).map(entry => {
             let data = {
                 time: new Date(entry.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC',
                 id: entry.id + (entry.seq ? '.' + entry.seq : ''),
