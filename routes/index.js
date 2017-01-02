@@ -1,6 +1,5 @@
 'use strict';
 
-const log = require('npmlog');
 const express = require('express');
 const router = new express.Router();
 const handler = require('../lib/handler');
@@ -79,6 +78,13 @@ router.get('/message/:id', (req, res, next) => {
                 time: new Date(entry.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC',
                 id: entry.id + (entry.seq ? '.' + entry.seq : ''),
                 action: entry.action,
+                actionLabel: {
+                    SPAMCHECK: 'default',
+                    QUEUED: 'primary',
+                    DEFERRED: 'warning',
+                    ACCEPTED: 'success',
+                    REJECTED: 'danger'
+                }[entry.action],
                 message: Object.keys(entry).filter(key => !['time', 'id', 'seq', 'action'].includes(key)).map(key => ({
                     key,
                     value: (entry[key] || '').toString().trim()

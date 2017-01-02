@@ -33,11 +33,15 @@
                     {{#each error.logEntries}}
                         <tr>
                             <td>
-                                <code>{{id}}</code><br />
+                                <small>{{id}}</small><br />
                                 <small>{{time}}</small>
                             </td>
                             <td>
-                                {{action}}
+                                {{#if actionLabel}}
+                                    <span class="label label-{{actionLabel}}">{{action}}</span>
+                                {{else}}
+                                    {{action}}
+                                {{/if}}
                             </td>
                             <td class="col-md-8">
                                 <div class="table-responsive">
