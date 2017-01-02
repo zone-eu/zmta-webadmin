@@ -40,18 +40,20 @@
                                 {{action}}
                             </td>
                             <td>
-                                <table class="table table-condensed">
-                                    {{#each message}}
-                                        <tr>
-                                            <td>
-                                                {{key}}
-                                            </td>
-                                            <td>
-                                                {{value}}
-                                            </td>
-                                        </tr>
-                                    {{/each}}
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table table-condensed">
+                                        {{#each message}}
+                                            <tr>
+                                                <td>
+                                                    {{key}}
+                                                </td>
+                                                <td>
+                                                    {{value}}
+                                                </td>
+                                            </tr>
+                                        {{/each}}
+                                    </table>
+                                </div>
                             </td>
                         </tr>
                     {{/each}}
