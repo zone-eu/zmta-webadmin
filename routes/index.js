@@ -66,7 +66,13 @@ router.get('/zone/:zone/:type', (req, res, next) => {
 });
 
 router.get('/message/:id', (req, res, next) => {
-    let id = (req.params.id || '').toString().replace(/\.[\w]{3}$/, '').trim();
+    let id = (req.params.id || '').toString().trim();
+    let seq;
+
+    if (id.indexOf('.') >= 0) {
+        seq = id.substr(id.lastIndexOf('.') + 1);
+        id = id.substr(0, id.lastIndexOf('.'));
+    }
 
     handler.fetchLogData(req.params.id, (err, logEntries) => {
         if (err) {
@@ -96,10 +102,13 @@ router.get('/message/:id', (req, res, next) => {
         handler.fetchMessageData(id, (err, message) => {
             if (err) {
                 err.logId = id;
+                err.logSeq = seq;
                 err.logEntries = logEntries;
                 return next(err);
             }
 
+            message.logId = id;
+            message.logSeq = seq;
             message.logEntries = logEntries;
             message.created = new Date(message.meta.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
 

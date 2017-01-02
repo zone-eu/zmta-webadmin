@@ -10,7 +10,10 @@
         <!-- Default panel contents -->
         <div class="panel-heading">
             <div>
-                Log entries for {{error.logId}}
+                Log entries for {{error.logId}}.
+                {{#if error.logSeq}}
+                    Filter <span class="label label-default">{{error.logSeq}}</span> (<a href="/message/{{error.logId}}">clear</a>).
+                {{/if}}
             </div>
         </div>
 
@@ -33,7 +36,7 @@
                     {{#each error.logEntries}}
                         <tr>
                             <td>
-                                <small><a href="/message/{{id}}#">{{id}}</a></small><br />
+                                <small><a href="/message/{{id}}">{{id}}</a></small><br />
                                 <small>{{time}}</small>
                             </td>
                             <td>

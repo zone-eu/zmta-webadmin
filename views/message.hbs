@@ -361,7 +361,7 @@
         <!-- Default panel contents -->
         <div class="panel-heading">
             <div>
-                Log entries
+                Log entries for {{meta.id}}
             </div>
         </div>
 
@@ -384,7 +384,7 @@
                     {{#each logEntries}}
                         <tr>
                             <td>
-                                <small><a href="/message/{{id}}#">{{id}}</a></small><br />
+                                <small><a href="/message/{{id}}">{{id}}</a></small><br />
                                 <small>{{time}}</small>
                             </td>
                             <td>
