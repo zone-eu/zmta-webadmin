@@ -107,14 +107,14 @@ router.get('/message/:id', (req, res, next) => {
             if (err) {
                 err.logId = id;
                 err.logSeq = seq;
-                err.logTo = seqTo;
+                err.seqTo = seqTo;
                 err.logEntries = logEntries;
                 return next(err);
             }
 
             message.logId = id;
             message.logSeq = seq;
-            message.logTo = seqTo;
+            message.seqTo = seqTo;
             message.logEntries = logEntries;
             message.created = new Date(message.meta.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
 
