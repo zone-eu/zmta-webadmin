@@ -363,7 +363,7 @@
             <div>
                 Log entries for {{logId}}
                 {{#if logSeq}}
-                    <span class="label label-default">{{logSeq}}</span> (<a href="/message/{{logId}}#logentries">clear filter</a>)
+                    <span class="label label-default">{{logSeq}}{{#if seqTo}} – {{seqTo}}{{/if}}</span> (<a href="/message/{{logId}}#logentries">clear filter</a>)
                 {{/if}}
             </div>
         </div>

@@ -68,6 +68,7 @@ router.get('/zone/:zone/:type', (req, res, next) => {
 router.get('/message/:id', (req, res, next) => {
     let id = (req.params.id || '').toString().trim();
     let seq;
+    let seqTo;
 
     if (id.indexOf('.') >= 0) {
         seq = id.substr(id.lastIndexOf('.') + 1);
@@ -80,6 +81,9 @@ router.get('/message/:id', (req, res, next) => {
         }
 
         logEntries = [].concat(logEntries && logEntries.entries || []).map(entry => {
+            if (seq && entry.seq && entry.seq === seq && !seqTo) {
+                seqTo = entry.to;
+            }
             let data = {
                 time: new Date(entry.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC',
                 id: entry.id + (entry.seq ? '.' + entry.seq : ''),
@@ -103,12 +107,14 @@ router.get('/message/:id', (req, res, next) => {
             if (err) {
                 err.logId = id;
                 err.logSeq = seq;
+                err.logTo = seqTo;
                 err.logEntries = logEntries;
                 return next(err);
             }
 
             message.logId = id;
             message.logSeq = seq;
+            message.logTo = seqTo;
             message.logEntries = logEntries;
             message.created = new Date(message.meta.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
 
