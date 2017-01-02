@@ -6,13 +6,13 @@
 {{/if}}
 
 {{#if error.logEntries}}
-    <div class="panel panel-default">
+    <div class="panel panel-default" id="logentries">
         <!-- Default panel contents -->
         <div class="panel-heading">
             <div>
                 Log entries for {{error.logId}}
                 {{#if error.logSeq}}
-                    <span class="label label-default">{{error.logSeq}}</span> (<a href="/message/{{error.logId}}">clear filter</a>).
+                    <span class="label label-default">{{error.logSeq}}</span> (<a href="/message/{{error.logId}}#logentries">clear filter</a>)
                 {{/if}}
             </div>
         </div>
@@ -36,7 +36,7 @@
                     {{#each error.logEntries}}
                         <tr>
                             <td>
-                                <small><a href="/message/{{id}}">{{id}}</a></small><br />
+                                <small><a href="/message/{{id}}#logentries">{{id}}</a></small><br />
                                 <small>{{time}}</small>
                             </td>
                             <td>
