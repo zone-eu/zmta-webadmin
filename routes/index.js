@@ -81,8 +81,8 @@ router.get('/message/:id', (req, res, next) => {
                 action: entry.action,
                 message: Object.keys(entry).filter(key => !['time', 'id', 'seq', 'action'].includes(key)).map(key => ({
                     key,
-                    value: (entry[key] || '').toString()
-                })).sort((a, b) => a.key.localeCompare(b.key))
+                    value: (entry[key] || '').toString().trim()
+                })).filter(data => data.value).sort((a, b) => a.key.localeCompare(b.key))
             };
             return data;
         });
