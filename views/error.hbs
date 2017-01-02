@@ -12,7 +12,7 @@
             <div>
                 Log entries for {{error.logId}}
                 {{#if error.logSeq}}
-                    <span class="label label-default">{{error.logSeq}}</span> (<a href="/message/{{error.logId}}#logentries">clear filter</a>)
+                    <span class="label label-default">{{error.logSeq}}{{#if error.seqTo}} – {{error.seqTo}}{{/if}}</span> (<a href="/message/{{error.logId}}#logentries">clear filter</a>)
                 {{/if}}
             </div>
         </div>
