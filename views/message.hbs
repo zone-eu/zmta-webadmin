@@ -365,51 +365,49 @@
             </div>
         </div>
 
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Entry
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Data
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each logEntries}}
                     <tr>
-                        <th>
-                            Entry
-                        </th>
-                        <th>
-                            Action
-                        </th>
-                        <th>
-                            Data
-                        </th>
+                        <td>
+                            <code>{{id}}</code><br />
+                            <small>{{time}}</small>
+                        </td>
+                        <td>
+                            {{action}}
+                        </td>
+                        <td>
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                    {{#each message}}
+                                        <tr>
+                                            <td>
+                                                {{key}}
+                                            </td>
+                                            <td>
+                                                {{value}}
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                </table>
+                            </div>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {{#each logEntries}}
-                        <tr>
-                            <td>
-                                <code>{{id}}</code><br />
-                                <small>{{time}}</small>
-                            </td>
-                            <td>
-                                {{action}}
-                            </td>
-                            <td>
-                                <div class="table-responsive">
-                                    <table class="table table-condensed">
-                                        {{#each message}}
-                                            <tr>
-                                                <td>
-                                                    {{key}}
-                                                </td>
-                                                <td>
-                                                    {{value}}
-                                                </td>
-                                            </tr>
-                                        {{/each}}
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-        </div>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
 {{/if}}
