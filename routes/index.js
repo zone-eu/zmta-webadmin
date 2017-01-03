@@ -77,7 +77,7 @@ router.get('/message/:id', (req, res, next) => {
 
     handler.fetchLogData(req.params.id, (err, logEntries) => {
         if (err) {
-            return next(err);
+            // ignore
         }
 
         logEntries = [].concat(logEntries && logEntries.entries || []).map(entry => {
@@ -93,12 +93,26 @@ router.get('/message/:id', (req, res, next) => {
                     QUEUED: 'primary',
                     DEFERRED: 'warning',
                     ACCEPTED: 'success',
-                    REJECTED: 'danger'
+                    REJECTED: 'danger',
+                    DROP: 'danger'
                 }[entry.action],
-                message: Object.keys(entry).filter(key => !['time', 'id', 'seq', 'action'].includes(key)).map(key => ({
-                    key,
-                    value: (entry[key] || '').toString().trim()
-                })).filter(data => data.value).sort((a, b) => a.key.localeCompare(b.key))
+                message: Object.keys(entry).filter(key => !['time', 'id', 'seq', 'action'].includes(key)).map(key => {
+                    let value = (entry[key] || '').toString().trim();
+                    switch (key) {
+                        case 'size':
+                        case 'body':
+                            value += ' B';
+                            break;
+                        case 'start':
+                        case 'timer':
+                            value = ((Number(value) || 0) / 1000) + ' sec';
+                            break;
+                    }
+                    return {
+                        key,
+                        value
+                    };
+                }).filter(data => data.value).sort((a, b) => a.key.localeCompare(b.key))
             };
             return data;
         });
