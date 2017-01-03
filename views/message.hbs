@@ -398,7 +398,8 @@
                                 {{/if}}
                             </td>
                             <td class="col-md-8">
-                                <div class="table-responsive">
+                                <button class="btn btn-link btn-xs" type="button" data-toggle="collapse" data-target="#panel{{@index}}" aria-expanded="false" aria-controls="collapseExample">Details</button>
+                                <div id="panel{{@index}}" class="table-responsive collapse">
                                     <table class="table table-condensed">
                                         {{#each message}}
                                             <tr>
