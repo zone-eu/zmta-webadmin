@@ -34,7 +34,7 @@
                         <th>
                             Queued
                         </th>
-                        <td>
+                        <td class="datestring" title="{{created}}">
                             {{created}}
                         </td>
                     </tr>
@@ -214,7 +214,7 @@
                         <th class="col-md-2">
                             Date:
                         </th>
-                        <td>
+                        <td class="datestring" title="{{meta.date}}">
                             {{meta.date}}
                         </td>
                     </tr>
@@ -330,7 +330,7 @@
                                     <span class="label label-{{label}}">{{status}}</span>
                                 {{/if}}
                             </td>
-                            <td>
+                            <td class="datestring" title="{{nextAttempt}}">
                                 {{nextAttempt}}
                             </td>
                             <td>
@@ -388,7 +388,7 @@
                         <tr>
                             <td>
                                 <small><a href="/message/{{id}}#logentries">{{id}}</a></small><br />
-                                <small>{{time}}</small>
+                                <small class="datestring" title="{{time}}">{{time}}</small>
                             </td>
                             <td>
                                 {{#if actionLabel}}

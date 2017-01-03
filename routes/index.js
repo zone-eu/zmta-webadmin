@@ -85,7 +85,7 @@ router.get('/message/:id', (req, res, next) => {
                 seqTo = entry.to;
             }
             let data = {
-                time: new Date(entry.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC',
+                time: new Date(entry.time).toISOString(),
                 id: entry.id + (entry.seq ? '.' + entry.seq : ''),
                 action: entry.action,
                 actionLabel: {
@@ -116,10 +116,10 @@ router.get('/message/:id', (req, res, next) => {
             message.logSeq = seq;
             message.seqTo = seqTo;
             message.logEntries = logEntries;
-            message.created = new Date(message.meta.time).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
+            message.created = new Date(message.meta.time).toISOString();
 
             if (message.meta.expiresAfter) {
-                message.meta.expiresAfter = new Date(message.meta.expiresAfter).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
+                message.meta.expiresAfter = new Date(message.meta.expiresAfter).toISOString();
             }
 
             let headers = new mailsplit.Headers(message.meta.headers);
@@ -161,7 +161,7 @@ router.get('/message/:id', (req, res, next) => {
 
                 if (entry.deferred) {
                     entry.label = 'warning';
-                    entry.nextAttempt = new Date(entry.deferred.next).toISOString().substr(0, 19).replace(/T/, ' ') + ' UTC';
+                    entry.nextAttempt = new Date(entry.deferred.next).toISOString();
                     entry.serverResponse = entry.deferred.response;
                     entry.smtpLog = entry.deferred.log && entry.deferred.log.length || false;
                 } else {
@@ -244,7 +244,7 @@ router.get('/blacklist', (req, res, next) => {
         res.render('blacklist', {
             items: list.map((item, i) => {
                 item.index = i + 1;
-                item.time = new Date(item.created ? item.created : 0).toISOString().substr(0, 19).replace(/T/, ' ');
+                item.time = new Date(item.created ? item.created : 0).toISOString();
                 return item;
             })
         });
