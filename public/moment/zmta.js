@@ -1,4 +1,4 @@
-var elms = document.querySelector('.datestring');
+var elms = document.querySelectorAll('.datestring');
 var elm;
 var date;
 
