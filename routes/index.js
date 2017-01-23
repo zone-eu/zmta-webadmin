@@ -241,9 +241,11 @@ router.post('/find', (req, res, next) => {
             return next(new Error('Nothing found'));
         }
 
+        let matcher = (term || '').toString().toLowerCase().replace(/[<>\s]/g, '').trim();
         res.render('message-ids', {
             query: term,
             items: result.entries.map((item, i) => {
+                item.messageId = item.messageId.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(matcher, '<strong>' + matcher + '</strong>');
                 item.index = i + 1;
                 return item;
             })
