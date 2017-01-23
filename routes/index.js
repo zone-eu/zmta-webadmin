@@ -245,7 +245,15 @@ router.post('/find', (req, res, next) => {
         res.render('message-ids', {
             query: term,
             items: result.entries.map((item, i) => {
-                item.messageId = item.messageId.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(matcher, '<strong>' + matcher + '</strong>');
+                let messageId = item.messageId.replace(/</g, '').replace(/>/g, '').trim();
+                if (matcher) {
+                    if (messageId.indexOf(matcher) === 0) {
+                        messageId = '<strong>' + messageId.substr(0, matcher.length) + '</strong>' + messageId.substr(matcher.length);
+                    } else if (messageId.lastIndexOf(matcher) === messageId.length - matcher.length) {
+                        messageId = messageId.substr(0, messageId.length - matcher.length) + '<strong>' + messageId.substr(-matcher.length) + '</strong>';
+                    }
+                }
+                item.messageId = '&lt;' + messageId + '&gt;';
                 item.index = i + 1;
                 return item;
             })
