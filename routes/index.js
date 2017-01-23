@@ -218,8 +218,33 @@ router.get('/fetch/:id', (req, res) => {
     handler.getFetchStream(req.params.id).pipe(res);
 });
 
-router.post('/find', (req, res) => {
-    res.redirect('/message/' + req.body.id);
+router.post('/find', (req, res, next) => {
+
+    let term = (req.body.id || '').trim();
+    if (!term) {
+        return res.redirect('/');
+    }
+
+    if (/^[0-9a-z]{18}(\.[0-9a-z]{3})?$/i.test(term)) {
+        return res.redirect('/message/' + term);
+    }
+
+    handler.fetchMessageIdData(term, (err, result) => {
+        if (err) {
+            return next(err);
+        }
+        if (!result || !result.entries || !result.entries.length) {
+            return next(new Error('Nothing found'));
+        }
+
+        res.render('message-ids', {
+            items: result.entries.map((item, i) => {
+                item.index = i + 1;
+                return item;
+            })
+        });
+    });
+
 });
 
 router.get('/send', (req, res) => {

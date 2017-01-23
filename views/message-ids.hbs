@@ -1,0 +1,46 @@
+<h2><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</h2>
+
+<p>
+    Log server found the following matching Message-ID values
+</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover table-condensed">
+
+        <thead>
+
+            <tr>
+                <th class="col-md-1">
+                    #
+                </th>
+
+                <th>
+                    ID
+                </th>
+
+                <th>
+                    Message-ID
+                </th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {{#each items}}
+                <tr>
+                    <th>
+                        {{index}}
+                    </th>
+                    <td>
+                        <a href="/message/{{id}}">{{id}}</a>
+                    </td>
+                    <td>
+                        {{messageId}}
+                    </td>
+                </tr>
+            {{/each}}
+
+        </tbody>
+    </table>
+</div>
