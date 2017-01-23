@@ -225,6 +225,10 @@ router.post('/find', (req, res, next) => {
         return res.redirect('/');
     }
 
+    if (term.length > 255) {
+        term = term.substr(0, 255);
+    }
+
     if (/^[0-9a-z]{18}(\.[0-9a-z]{3})?$/i.test(term)) {
         return res.redirect('/message/' + term);
     }
@@ -238,6 +242,7 @@ router.post('/find', (req, res, next) => {
         }
 
         res.render('message-ids', {
+            query: term,
             items: result.entries.map((item, i) => {
                 item.index = i + 1;
                 return item;
