@@ -4,6 +4,12 @@ Web administration component for [ZoneMTA](https://github.com/zone-eu/zone-mta).
 
 See screenshots [here](https://cloudup.com/c_TLoJ62sdY).
 
+## Requirements
+
+1. [ZoneMTA](https://github.com/zone-eu/zone-mta)
+2. [Redis](https://redis.io/) – required for counters
+3. [delivery-counters](https://github.com/andris9/zonemta-delivery-counters) plugin for ZoneMTA
+
 ## Setup
 
 1. Copy these files to the same server where ZoneMTA runs
