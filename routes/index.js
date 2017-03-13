@@ -174,6 +174,7 @@ router.get('/message/:id', (req, res, next) => {
                 entry.index = i + 1;
 
                 if (entry.deferred) {
+                    message.hasDeferred = true;
                     entry.label = 'warning';
                     entry.nextAttempt = new Date(entry.deferred.next).toISOString();
                     entry.serverResponse = entry.deferred.response;
@@ -282,6 +283,15 @@ router.post('/send', (req, res, next) => {
 
 router.post('/delete', (req, res, next) => {
     handler.deleteMessage(req.body.id, req.body.seq, err => {
+        if (err) {
+            return next(err);
+        }
+        return res.redirect('/message/' + req.body.id);
+    });
+});
+
+router.post('/send-now', (req, res, next) => {
+    handler.sendMessages(req.body.id, req.body.seq, err => {
         if (err) {
             return next(err);
         }

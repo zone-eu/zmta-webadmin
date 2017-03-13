@@ -14,6 +14,11 @@
         <input type="hidden" name="seq" value="" />
     </form>
 
+    <form method="post" action="/send-now" id="messages-send" onsubmit="return confirm('Are you sure?')">
+        <input type="hidden" name="id" value="{{meta.id}}" />
+        <input type="hidden" name="seq" value="" />
+    </form>
+
     <!-- Tab panes -->
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="envelope">
@@ -132,6 +137,10 @@
                             </th>
                             <td>
                                 <button type="submit" form="messages-delete" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button>
+
+                                {{#if hasDeferred}}
+                                    <button type="submit" form="messages-send" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Send now</button>
+                                {{/if}}
                             </td>
                         </tr>
                     {{/if}}
@@ -341,11 +350,22 @@
                                 </small>
                             </td>
                             <td>
-                                <form method="post" action="/delete" onsubmit="return confirm('Are you sure?')">
+                                <form method="post" id="delete-form-{{id}}" action="/delete" onsubmit="return confirm('Are you sure?')">
                                     <input type="hidden" name="id" value="{{id}}" />
                                     <input type="hidden" name="seq" value="{{seq}}" />
-                                    <button type="submit" class="btn btn-link"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
                                 </form>
+
+                                <form method="post" id="send-form-{{id}}" action="/send-now" onsubmit="return confirm('Are you sure?')">
+                                    <input type="hidden" name="id" value="{{id}}" />
+                                    <input type="hidden" name="seq" value="{{seq}}" />
+                                </form>
+
+                                <button type="submit" form="delete-form-{{id}}" class="btn btn-link"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
+                                {{#if deferred}}
+                                    <button type="submit" form="send-form-{{id}}" class="btn btn-link"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></button>
+                                {{/if}}
                             </td>
                         </tr>
                     {{/each}}
