@@ -126,11 +126,13 @@ router.get('/message/:id', (req, res, next) => {
                 return next(err);
             }
 
+            let time = message.meta && message.meta.time && typeof message.meta.time === 'number' && message.meta.time || Date.now();
+
             message.logId = id;
             message.logSeq = seq;
             message.seqTo = seqTo;
             message.logEntries = logEntries;
-            message.created = new Date(message.meta.time).toISOString();
+            message.created = new Date(time).toISOString();
 
             if (message.meta.expiresAfter) {
                 message.meta.expiresAfter = new Date(message.meta.expiresAfter).toISOString();
