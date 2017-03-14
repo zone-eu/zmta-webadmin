@@ -126,7 +126,10 @@ router.get('/message/:id', (req, res, next) => {
                 return next(err);
             }
 
-            let time = message.meta && message.meta.time && typeof message.meta.time === 'number' && message.meta.time || Date.now();
+            message.meta = message.meta || {};
+            message.headers = message.headers || [];
+
+            let time = typeof message.meta.time === 'number' && message.meta.time || Date.now();
 
             message.logId = id;
             message.logSeq = seq;
