@@ -141,7 +141,7 @@ router.get('/message/:id', (req, res, next) => {
                 message.meta.expiresAfter = new Date(message.meta.expiresAfter).toISOString();
             }
 
-            let headers = new mailsplit.Headers(message.meta.headers);
+            let headers = new mailsplit.Headers(message.meta.headers || []);
             message.subject = headers.getFirst('subject');
             try {
                 message.subject = libmime.decodeWords(message.subject);
