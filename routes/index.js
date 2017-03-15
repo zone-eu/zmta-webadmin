@@ -94,6 +94,7 @@ router.get('/message/:id', (req, res, next) => {
                     DEFERRED: 'warning',
                     ACCEPTED: 'success',
                     REJECTED: 'danger',
+                    DELETED: 'danger',
                     DROP: 'danger'
                 }[entry.action],
                 message: Object.keys(entry).filter(key => !['time', 'id', 'seq', 'action'].includes(key)).map(key => {
@@ -186,7 +187,7 @@ router.get('/message/:id', (req, res, next) => {
                     entry.smtpLog = entry.deferred.log && entry.deferred.log.length || false;
                 } else {
                     entry.label = 'success';
-                    entry.nextAttempt = 'N/A';
+                    entry.nextAttempt = 'Whenever possible';
                     entry.serverResponse = 'N/A';
                 }
                 return entry;

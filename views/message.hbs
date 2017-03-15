@@ -340,7 +340,11 @@
                                 {{/if}}
                             </td>
                             <td class="datestring-relative" title="{{nextAttempt}}">
-                                {{nextAttempt}}
+                                {{#if lock}}
+                                    Delivery in process
+                                {{else}}
+                                    {{nextAttempt}}
+                                {{/if}}
                             </td>
                             <td>
                                 <small>{{serverResponse}}
