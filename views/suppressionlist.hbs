@@ -1,0 +1,82 @@
+<h2><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Suppression list</h2>
+
+<p>
+    This page lists all addresses and domains that are suppressed. All mail sent to these destinations are silently dropped.
+</p>
+
+<p>
+    Suppression list entries are exact matches only, now partial matches or regular expressions allowed. Unicode domains and usernames are allowed.
+</p>
+
+<form method="post" action="/suppressionlist/add" onsubmit="return confirm('Are you sure?')">
+    <div class="form-group">
+        <label for="address">Email address</label>
+        <input type="address" class="form-control" id="address" name="address" placeholder="Email address to suppress">
+    </div>
+    <div class="form-group">
+        <label for="domain">Domain</label>
+        <input type="domain" class="form-control" id="domain" name="domain" placeholder="Recipient domain to suppress">
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">Add to list</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover table-condensed">
+
+        <thead>
+
+            <tr>
+                <th class="col-md-1">
+                    #
+                </th>
+
+                <th>
+                    Address
+                </th>
+
+                <th>
+                    Domain
+                </th>
+
+                <th>
+                    Added
+                </th>
+
+                <th>
+                    &nbsp;
+                </th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {{#each items}}
+                <tr>
+                    <th>
+                        {{index}}
+                    </th>
+                    <td>
+                        {{address}}
+                    </td>
+                    <td>
+                        {{domain}}
+                    </td>
+                    <td class="datestring" title="{{time}}">
+                        {{time}}
+                    </td>
+                    <td>
+                        <form method="post" id="delete-form-{{id}}" action="/suppressionlist/delete" onsubmit="return confirm('Are you sure?')">
+                            <input type="hidden" name="id" value="{{id}}" />
+                        </form>
+
+                        <button type="submit" form="delete-form-{{id}}" class="btn btn-link"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                    </td>
+                </tr>
+            {{/each}}
+
+        </tbody>
+    </table>
+</div>

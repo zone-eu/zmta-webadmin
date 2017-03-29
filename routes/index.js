@@ -321,4 +321,78 @@ router.get('/blacklist', (req, res, next) => {
     });
 });
 
+router.get('/suppressionlist', (req, res, next) => {
+    handler.fetchSuppressionlist((err, list) => {
+        if (err) {
+            return next(err);
+        }
+
+        res.render('suppressionlist', {
+            items: list.map((item, i) => {
+                item.index = i + 1;
+                item.time = new Date(item.created ? item.created : 0).toISOString();
+                return item;
+            })
+        });
+    });
+});
+
+router.post('/suppressionlist/add', (req, res, next) => {
+
+    let address = (req.body.address || '').toString().trim();
+    let domain = (req.body.domain || '').toString().trim();
+
+    if (!address && !domain) {
+        req.flash('danger', 'Empty values');
+        return res.redirect('/suppressionlist');
+    }
+
+    handler.addToSuppressionlist({
+        address,
+        domain
+    }, (err, message) => {
+        if (err) {
+            return next(err);
+        }
+
+        if (err) {
+            req.flash('danger', err.message);
+        }
+
+        if (message && message.suppressed) {
+            req.flash('success', 'New entry added with id ' + message.suppressed.id);
+        }
+
+        res.redirect('/suppressionlist');
+    });
+});
+
+router.post('/suppressionlist/delete', (req, res, next) => {
+
+    let id = (req.body.id || '').toString().trim();
+
+    if (!id) {
+        req.flash('danger', 'Empty values');
+        return res.redirect('/suppressionlist');
+    }
+
+    handler.deleteFromSuppressionlist({
+        id
+    }, (err, message) => {
+        if (err) {
+            return next(err);
+        }
+
+        if (err) {
+            req.flash('danger', err.message);
+        }
+
+        if (message && message.deleted) {
+            req.flash('success', 'Entry deleted with id ' + message.deleted);
+        }
+
+        res.redirect('/suppressionlist');
+    });
+});
+
 module.exports = router;
