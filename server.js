@@ -39,4 +39,8 @@ server.on('listening', () => {
     log.info('Express', 'WWW server listening on %s', bind);
 });
 
+process.on('uncaughtException', err => {
+    console.log(err);
+});
+
 server.listen(port, host);

@@ -94,8 +94,8 @@ hbs.registerHelper('dec', function(options) {
     );
 });
 
-app.use(compression());
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+//app.use(compression());
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 app.use(
     logger(config.httplog, {
