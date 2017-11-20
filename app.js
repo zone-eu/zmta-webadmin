@@ -1,6 +1,6 @@
 'use strict';
 
-let config = require('config');
+const config = require('config');
 let log = require('npmlog');
 
 let express = require('express');
@@ -39,8 +39,10 @@ app.disable('x-powered-by');
  * in a situation where we consume a flash messages but then comes a redirect
  * and the message is never displayed
  */
-hbs.registerHelper('flash_messages', function () { // eslint-disable-line prefer-arrow-callback
-    if (typeof this.flash !== 'function') { // eslint-disable-line no-invalid-this
+hbs.registerHelper('flash_messages', function() {
+    // eslint-disable-line prefer-arrow-callback
+    if (typeof this.flash !== 'function') {
+        // eslint-disable-line no-invalid-this
         return '';
     }
 
@@ -49,7 +51,10 @@ hbs.registerHelper('flash_messages', function () { // eslint-disable-line prefer
 
     // group messages by type
     Object.keys(messages).forEach(key => {
-        let el = '<div class="alert alert-' + key + ' alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+        let el =
+            '<div class="alert alert-' +
+            key +
+            ' alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
 
         if (key === 'danger') {
             el += '<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> ';
@@ -72,18 +77,18 @@ hbs.registerHelper('flash_messages', function () { // eslint-disable-line prefer
         response.push(el);
     });
 
-    return new hbs.handlebars.SafeString(
-        response.join('\n')
-    );
+    return new hbs.handlebars.SafeString(response.join('\n'));
 });
 
-hbs.registerHelper('num', function (options) { // eslint-disable-line prefer-arrow-callback
+hbs.registerHelper('num', function(options) {
+    // eslint-disable-line prefer-arrow-callback
     return new hbs.handlebars.SafeString(
         humanize.numberFormat(options.fn(this), 0, ',', ' ') // eslint-disable-line no-invalid-this
     );
 });
 
-hbs.registerHelper('dec', function (options) { // eslint-disable-line prefer-arrow-callback
+hbs.registerHelper('dec', function(options) {
+    // eslint-disable-line prefer-arrow-callback
     return new hbs.handlebars.SafeString(
         humanize.numberFormat(options.fn(this), 3, ',', ' ') // eslint-disable-line no-invalid-this
     );
@@ -92,40 +97,50 @@ hbs.registerHelper('dec', function (options) { // eslint-disable-line prefer-arr
 app.use(compression());
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-app.use(logger(config.httplog, {
-    stream: {
-        write: message => {
-            message = (message || '').toString();
-            if (message && process.NODE_ENV !== 'production') {
-                log.info('HTTP', message.replace('\n', '').trim());
+app.use(
+    logger(config.httplog, {
+        stream: {
+            write: message => {
+                message = (message || '').toString();
+                if (message && process.NODE_ENV !== 'production') {
+                    log.info('HTTP', message.replace('\n', '').trim());
+                }
             }
         }
-    }
-}));
+    })
+);
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({
-    store: new RedisStore(config.redis),
-    secret: config.secret,
-    saveUninitialized: false,
-    resave: false
-}));
+app.use(
+    session({
+        store: new RedisStore(config.redis),
+        secret: config.secret,
+        saveUninitialized: false,
+        resave: false
+    })
+);
 app.use(flash());
 
-app.use(bodyParser.urlencoded({
-    extended: true,
-    limit: config.maxPostSize
-}));
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+        limit: config.maxPostSize
+    })
+);
 
-app.use(bodyParser.text({
-    limit: config.maxPostSize
-}));
+app.use(
+    bodyParser.text({
+        limit: config.maxPostSize
+    })
+);
 
-app.use(bodyParser.json({
-    limit: config.maxPostSize
-}));
+app.use(
+    bodyParser.json({
+        limit: config.maxPostSize
+    })
+);
 
 // make sure flash messages are available
 app.use((req, res, next) => {
@@ -141,7 +156,7 @@ app.use((req, res, next) => {
 
     res.setSelectedMenu = key => {
         menu.forEach(item => {
-            item.selected = (item.key === key);
+            item.selected = item.key === key;
         });
     };
 
