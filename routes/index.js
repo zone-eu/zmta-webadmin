@@ -290,11 +290,7 @@ router.post('/find', (req, res, next) => {
                 items: entries.map((item, i) => {
                     let messageId = item.mid;
                     if (matcher) {
-                        if (messageId.indexOf(matcher) === 0) {
-                            messageId = '<strong>' + messageId.substr(0, matcher.length) + '</strong>' + messageId.substr(matcher.length);
-                        } else if (messageId.lastIndexOf(matcher) === messageId.length - matcher.length) {
-                            messageId = messageId.substr(0, messageId.length - matcher.length) + '<strong>' + messageId.substr(-matcher.length) + '</strong>';
-                        }
+                        messageId = messageId.replace(new RegExp(escapeRegexStr(matcher)), m => '<strong>' + m + '</strong>');
                     }
                     item.created = item.t.toISOString();
                     item.messageId = '&lt;' + messageId + '&gt;';
