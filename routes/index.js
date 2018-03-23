@@ -3,6 +3,7 @@
 const express = require('express');
 const router = new express.Router();
 const handler = require('../lib/handler');
+const db = require('../lib/db');
 const libmime = require('libmime');
 const mailsplit = require('mailsplit');
 const util = require('util');
@@ -75,134 +76,138 @@ router.get('/message/:id', (req, res, next) => {
         id = id.substr(0, id.lastIndexOf('.'));
     }
 
-    handler.fetchLogData(req.params.id, (err, logEntries) => {
-        if (err) {
-            // ignore
-        }
-
-        logEntries = [].concat((logEntries && logEntries.entries) || []).map(entry => {
-            if (seq && entry.seq && entry.seq === seq && !seqTo) {
-                seqTo = entry.to;
-            }
-            let data = {
-                time: new Date(entry.time).toISOString(),
-                id: entry.id + (entry.seq ? '.' + entry.seq : ''),
-                action: entry.action,
-                actionLabel: {
-                    SPAMCHECK: 'default',
-                    QUEUED: 'primary',
-                    DEFERRED: 'warning',
-                    ACCEPTED: 'success',
-                    REJECTED: 'danger',
-                    DELETED: 'danger',
-                    DROP: 'danger'
-                }[entry.action],
-                message: Object.keys(entry)
-                    .filter(key => !['time', 'id', 'seq', 'action'].includes(key))
-                    .map(key => {
-                        let value = (entry[key] || '').toString().trim();
-                        switch (key) {
-                            case 'size':
-                            case 'body':
-                                value += ' B';
-                                break;
-                            case 'start':
-                            case 'timer':
-                                value = (Number(value) || 0) / 1000 + ' sec';
-                                break;
-                        }
-                        return {
-                            key,
-                            value
-                        };
-                    })
-                    .filter(data => data.value)
-                    .sort((a, b) => a.key.localeCompare(b.key))
-            };
-            return data;
-        });
-
-        handler.fetchMessageData(id, (err, message) => {
+    db.client
+        .collection('messages')
+        .find({ id: req.params.id })
+        .sort({ t: 1 })
+        .toArray((err, logEntries) => {
             if (err) {
-                err.logId = id;
-                err.logSeq = seq;
-                err.seqTo = seqTo;
-                err.logEntries = logEntries;
-                return next(err);
-            }
-
-            message.meta = message.meta || {};
-            message.headers = message.headers || [];
-
-            let time = (typeof message.meta.time === 'number' && message.meta.time) || Date.now();
-
-            message.logId = id;
-            message.logSeq = seq;
-            message.seqTo = seqTo;
-            message.logEntries = logEntries;
-            message.created = new Date(time).toISOString();
-
-            if (message.meta.expiresAfter) {
-                message.meta.expiresAfter = new Date(message.meta.expiresAfter).toISOString();
-            }
-
-            let headers = new mailsplit.Headers(message.meta.headers || []);
-            message.subject = headers.getFirst('subject');
-            try {
-                message.subject = libmime.decodeWords(message.subject);
-            } catch (E) {
                 // ignore
             }
 
-            if (message.meta.spam && message.meta.spam.default) {
-                message.spamStatus = true;
-                switch (message.meta.spam.default.action) {
-                    case 'no action':
-                        message.spamLabel = 'success';
-                        message.spamText = 'Clean';
-                        break;
-                    case 'reject':
-                        message.spamLabel = 'danger';
-                        message.spamText = 'Spam';
-                        break;
-                    default:
-                        message.spamLabel = 'warning';
-                        message.spamText = (message.meta.spam.default.action || '').replace(/^\w/, c => c.toUpperCase());
+            logEntries = [].concat(logEntries || []).map(entry => {
+                if (seq && entry.seq && entry.seq === seq && !seqTo) {
+                    seqTo = entry.to;
                 }
-                message.spamScore = (Number(message.meta.spam.default.score) || 0).toFixed(2);
-                message.spamTests = message.meta.spam.tests.join(', ');
-            }
-
-            message.mailFrom = message.meta.from || '<>';
-            message.rcptTo = [].concat(message.meta.to || []).join(', ');
-
-            message.headers = headers.build();
-            message.size = message.headers.length + message.meta.bodySize;
-            message.headers = message.headers
-                .toString()
-                .replace(/\r/g, '')
-                .trim();
-
-            message.messages = message.messages.map((entry, i) => {
-                entry.index = i + 1;
-
-                if (entry.deferred) {
-                    message.hasDeferred = true;
-                    entry.label = 'warning';
-                    entry.nextAttempt = new Date(entry.deferred.next).toISOString();
-                    entry.serverResponse = entry.deferred.response;
-                    entry.smtpLog = (entry.deferred.log && entry.deferred.log.length) || false;
-                } else {
-                    entry.label = 'success';
-                    entry.nextAttempt = 'Whenever possible';
-                    entry.serverResponse = 'N/A';
-                }
-                return entry;
+                let data = {
+                    time: new Date(entry.time).toISOString(),
+                    id: entry.id + (entry.seq ? '.' + entry.seq : ''),
+                    action: entry.action,
+                    actionLabel: {
+                        SPAMCHECK: 'default',
+                        QUEUED: 'primary',
+                        DEFERRED: 'warning',
+                        ACCEPTED: 'success',
+                        REJECTED: 'danger',
+                        DELETED: 'danger',
+                        DROP: 'danger'
+                    }[entry.action],
+                    message: Object.keys(entry)
+                        .filter(key => !['time', 'id', 'seq', 'action'].includes(key))
+                        .map(key => {
+                            let value = (entry[key] || '').toString().trim();
+                            switch (key) {
+                                case 'size':
+                                case 'body':
+                                    value += ' B';
+                                    break;
+                                case 'start':
+                                case 'timer':
+                                    value = (Number(value) || 0) / 1000 + ' sec';
+                                    break;
+                            }
+                            return {
+                                key,
+                                value
+                            };
+                        })
+                        .filter(data => data.value)
+                        .sort((a, b) => a.key.localeCompare(b.key))
+                };
+                return data;
             });
 
-            res.render('message', message);
+            handler.fetchMessageData(id, (err, message) => {
+                if (err) {
+                    err.logId = id;
+                    err.logSeq = seq;
+                    err.seqTo = seqTo;
+                    err.logEntries = logEntries;
+                    return next(err);
+                }
+
+                message.meta = message.meta || {};
+                message.headers = message.headers || [];
+
+                let time = (typeof message.meta.time === 'number' && message.meta.time) || Date.now();
+
+                message.logId = id;
+                message.logSeq = seq;
+                message.seqTo = seqTo;
+                message.logEntries = logEntries;
+                message.created = new Date(time).toISOString();
+
+                if (message.meta.expiresAfter) {
+                    message.meta.expiresAfter = new Date(message.meta.expiresAfter).toISOString();
+                }
+
+                let headers = new mailsplit.Headers(message.meta.headers || []);
+                message.subject = headers.getFirst('subject');
+                try {
+                    message.subject = libmime.decodeWords(message.subject);
+                } catch (E) {
+                    // ignore
+                }
+
+                if (message.meta.spam && message.meta.spam.default) {
+                    message.spamStatus = true;
+                    switch (message.meta.spam.default.action) {
+                        case 'no action':
+                            message.spamLabel = 'success';
+                            message.spamText = 'Clean';
+                            break;
+                        case 'reject':
+                            message.spamLabel = 'danger';
+                            message.spamText = 'Spam';
+                            break;
+                        default:
+                            message.spamLabel = 'warning';
+                            message.spamText = (message.meta.spam.default.action || '').replace(/^\w/, c => c.toUpperCase());
+                    }
+                    message.spamScore = (Number(message.meta.spam.default.score) || 0).toFixed(2);
+                    message.spamTests = message.meta.spam.tests.join(', ');
+                }
+
+                message.mailFrom = message.meta.from || '<>';
+                message.rcptTo = [].concat(message.meta.to || []).join(', ');
+
+                message.headers = headers.build();
+                message.size = message.headers.length + message.meta.bodySize;
+                message.headers = message.headers
+                    .toString()
+                    .replace(/\r/g, '')
+                    .trim();
+
+                message.messages = message.messages.map((entry, i) => {
+                    entry.index = i + 1;
+
+                    if (entry.deferred) {
+                        message.hasDeferred = true;
+                        entry.label = 'warning';
+                        entry.nextAttempt = new Date(entry.deferred.next).toISOString();
+                        entry.serverResponse = entry.deferred.response;
+                        entry.smtpLog = (entry.deferred.log && entry.deferred.log.length) || false;
+                    } else {
+                        entry.label = 'success';
+                        entry.nextAttempt = 'Whenever possible';
+                        entry.serverResponse = 'N/A';
+                    }
+                    return entry;
+                });
+
+                res.render('message', message);
+            });
         });
-    });
 });
 
 router.get('/log/:id/:seq', (req, res, next) => {
@@ -214,18 +219,19 @@ router.get('/log/:id/:seq', (req, res, next) => {
         for (let i = 0, len = message.messages.length; i < len; i++) {
             let entry = message.messages[i];
             if (entry.seq === req.params.seq) {
-                let transaction = Array.isArray(entry.deferred.log)
-                    ? entry.deferred.log
-                          .map(row =>
-                              util.format(
-                                  '%s [%s]: %s',
-                                  new Date(row.time ? row.time : 0).toISOString(),
-                                  row.level,
-                                  row.message.replace(/\n/g, '\n' + ' '.repeat(48))
-                              )
-                          )
-                          .join('\n')
-                    : '';
+                let transaction = '';
+                if (Array.isArray(entry.deferred.log)) {
+                    transaction = entry.deferred.log
+                        .map(row =>
+                            util.format(
+                                '%s [%s]: %s',
+                                new Date(row.time ? row.time : 0).toISOString(),
+                                row.level,
+                                row.message.replace(/\n/g, '\n' + ' '.repeat(48))
+                            )
+                        )
+                        .join('\n');
+                }
                 res.render('log', {
                     id: entry.id,
                     transaction
@@ -243,7 +249,7 @@ router.get('/fetch/:id', (req, res) => {
 });
 
 router.post('/find', (req, res, next) => {
-    let term = (req.body.id || '').trim();
+    let term = (req.body.id || '').replace(/^[<\s]+|[>\s]+$/g, '');
     if (!term) {
         return res.redirect('/');
     }
@@ -256,39 +262,45 @@ router.post('/find', (req, res, next) => {
         return res.redirect('/message/' + term);
     }
 
-    handler.fetchMessageIdData(term, (err, result) => {
-        if (err) {
-            return next(err);
-        }
-        if (!result || !result.entries || !result.entries.length) {
-            return next(new Error('Nothing found'));
-        }
+    db.client
+        .collection('mids')
+        .find({
+            mid: {
+                $regex: escapeRegexStr(term),
+                $options: ''
+            }
+        })
+        .limit(100)
+        .toArray((err, entries) => {
+            if (err) {
+                return next(err);
+            }
+            if (!entries || !entries.length) {
+                return next(new Error('Nothing found'));
+            }
 
-        let matcher = (term || '')
-            .toString()
-            .toLowerCase()
-            .replace(/[<>\s]/g, '')
-            .trim();
-        res.render('message-ids', {
-            query: term,
-            items: result.entries.map((item, i) => {
-                let messageId = item.messageId
-                    .replace(/</g, '')
-                    .replace(/>/g, '')
-                    .trim();
-                if (matcher) {
-                    if (messageId.indexOf(matcher) === 0) {
-                        messageId = '<strong>' + messageId.substr(0, matcher.length) + '</strong>' + messageId.substr(matcher.length);
-                    } else if (messageId.lastIndexOf(matcher) === messageId.length - matcher.length) {
-                        messageId = messageId.substr(0, messageId.length - matcher.length) + '<strong>' + messageId.substr(-matcher.length) + '</strong>';
+            let matcher = (term || '')
+                .toString()
+                .toLowerCase()
+                .replace(/[<>\s]/g, '')
+                .trim();
+            res.render('message-ids', {
+                query: term,
+                items: entries.map((item, i) => {
+                    let messageId = item.mid;
+                    if (matcher) {
+                        if (messageId.indexOf(matcher) === 0) {
+                            messageId = '<strong>' + messageId.substr(0, matcher.length) + '</strong>' + messageId.substr(matcher.length);
+                        } else if (messageId.lastIndexOf(matcher) === messageId.length - matcher.length) {
+                            messageId = messageId.substr(0, messageId.length - matcher.length) + '<strong>' + messageId.substr(-matcher.length) + '</strong>';
+                        }
                     }
-                }
-                item.messageId = '&lt;' + messageId + '&gt;';
-                item.index = i + 1;
-                return item;
-            })
+                    item.messageId = '&lt;' + messageId + '&gt;';
+                    item.index = i + 1;
+                    return item;
+                })
+            });
         });
-    });
 });
 
 router.get('/send', (req, res) => {
@@ -422,3 +434,8 @@ router.post('/suppressionlist/delete', (req, res, next) => {
 });
 
 module.exports = router;
+
+function escapeRegexStr(string) {
+    let specials = ['-', '[', ']', '/', '{', '}', '(', ')', '*', '+', '?', '.', '\\', '^', '$', '|'];
+    return string.replace(RegExp('[' + specials.join('\\') + ']', 'g'), '\\$&');
+}

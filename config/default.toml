@@ -13,10 +13,23 @@ secret = "a cat" # cookie secret
 maxPostSize = "5MB"
 apiServer = "http://localhost:8080" # ZoneMTA API location
 counterPrefix = "zmta"
-logServer = "http://localhost:5388"
+
+# mongodb database name
+logsdb = "logs"
+
+retention = 2592000000 # 30 days
+
+mongo = "mongodb://127.0.0.1:27017/logs"
 
 [log]
 level = "info"
+
+[logserver]
+# set up a log collecting server to catch message updates from zone-mta
+enabled = false
+protocol = "udp4"
+host = false # allow from all
+port = 31239
 
 [redis]
 # redis is needed to fetch delivery counters

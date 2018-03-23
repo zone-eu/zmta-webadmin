@@ -2,45 +2,53 @@
 
 const config = require('wild-config');
 const log = require('npmlog');
-const app = require('./app');
 const http = require('http');
+const db = require('./lib/db');
 
 const port = config.port;
 const host = config.host;
 
 log.level = config.log.level;
-app.set('port', port);
 
-let server = http.createServer(app);
-
-server.on('error', err => {
-    if (err.syscall !== 'listen') {
+db.init(err => {
+    if (err) {
         throw err;
     }
 
-    let bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+    const app = require('./app'); // eslint-disable-line global-require
+    app.set('port', port);
 
-    // handle specific listen errors with friendly messages
-    switch (err.code) {
-        case 'EACCES':
-            log.error('Express', '%s requires elevated privileges', bind);
-            return process.exit(1);
-        case 'EADDRINUSE':
-            log.error('Express', '%s is already in use', bind);
-            return process.exit(1);
-        default:
+    let server = http.createServer(app);
+
+    server.on('error', err => {
+        if (err.syscall !== 'listen') {
             throw err;
-    }
-});
+        }
 
-server.on('listening', () => {
-    let addr = server.address();
-    let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-    log.info('Express', 'WWW server listening on %s', bind);
-});
+        let bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
-process.on('uncaughtException', err => {
-    console.log(err);
-});
+        // handle specific listen errors with friendly messages
+        switch (err.code) {
+            case 'EACCES':
+                log.error('Express', '%s requires elevated privileges', bind);
+                return process.exit(1);
+            case 'EADDRINUSE':
+                log.error('Express', '%s is already in use', bind);
+                return process.exit(1);
+            default:
+                throw err;
+        }
+    });
 
-server.listen(port, host);
+    server.on('listening', () => {
+        let addr = server.address();
+        let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+        log.info('Express', 'WWW server listening on %s', bind);
+    });
+
+    process.on('uncaughtException', err => {
+        log.error('App', err);
+    });
+
+    server.listen(port, host);
+});
