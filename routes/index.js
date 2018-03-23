@@ -90,7 +90,7 @@ router.get('/message/:id', (req, res, next) => {
                     seqTo = entry.to;
                 }
                 let data = {
-                    time: new Date(entry.time).toISOString(),
+                    time: entry.t.toISOString(),
                     id: entry.id + (entry.seq ? '.' + entry.seq : ''),
                     action: entry.action,
                     actionLabel: {
