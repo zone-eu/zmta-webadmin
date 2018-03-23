@@ -4,6 +4,7 @@ const config = require('wild-config');
 const log = require('npmlog');
 const http = require('http');
 const db = require('./lib/db');
+const logserver = require('./lib/logserver');
 
 const port = config.port;
 const host = config.host;
@@ -50,5 +51,7 @@ db.init(err => {
         log.error('App', err);
     });
 
-    server.listen(port, host);
+    logserver(() => {
+        server.listen(port, host);
+    });
 });
