@@ -1,0 +1,25 @@
+
+auth = false # set to true to enable authentication
+user = "admin"
+pass = "secretpass"
+
+port = 8082
+host = "127.0.0.1" # set to false to listen on all interfaces
+proxy = 1 # trust proxy headers
+
+httplog = "dev"
+
+secret = "a cat" # cookie secret
+maxPostSize = "5MB"
+apiServer = "http://localhost:8080" # ZoneMTA API location
+counterPrefix = "zmta"
+logServer = "http://localhost:5388"
+
+[log]
+level = "info"
+
+[redis]
+# redis is needed to fetch delivery counters
+host = "localhost"
+port = 6379
+db = 2

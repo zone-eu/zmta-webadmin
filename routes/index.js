@@ -80,7 +80,7 @@ router.get('/message/:id', (req, res, next) => {
             // ignore
         }
 
-        logEntries = [].concat(logEntries && logEntries.entries || []).map(entry => {
+        logEntries = [].concat((logEntries && logEntries.entries) || []).map(entry => {
             if (seq && entry.seq && entry.seq === seq && !seqTo) {
                 seqTo = entry.to;
             }
@@ -97,23 +97,27 @@ router.get('/message/:id', (req, res, next) => {
                     DELETED: 'danger',
                     DROP: 'danger'
                 }[entry.action],
-                message: Object.keys(entry).filter(key => !['time', 'id', 'seq', 'action'].includes(key)).map(key => {
-                    let value = (entry[key] || '').toString().trim();
-                    switch (key) {
-                        case 'size':
-                        case 'body':
-                            value += ' B';
-                            break;
-                        case 'start':
-                        case 'timer':
-                            value = ((Number(value) || 0) / 1000) + ' sec';
-                            break;
-                    }
-                    return {
-                        key,
-                        value
-                    };
-                }).filter(data => data.value).sort((a, b) => a.key.localeCompare(b.key))
+                message: Object.keys(entry)
+                    .filter(key => !['time', 'id', 'seq', 'action'].includes(key))
+                    .map(key => {
+                        let value = (entry[key] || '').toString().trim();
+                        switch (key) {
+                            case 'size':
+                            case 'body':
+                                value += ' B';
+                                break;
+                            case 'start':
+                            case 'timer':
+                                value = (Number(value) || 0) / 1000 + ' sec';
+                                break;
+                        }
+                        return {
+                            key,
+                            value
+                        };
+                    })
+                    .filter(data => data.value)
+                    .sort((a, b) => a.key.localeCompare(b.key))
             };
             return data;
         });
@@ -130,7 +134,7 @@ router.get('/message/:id', (req, res, next) => {
             message.meta = message.meta || {};
             message.headers = message.headers || [];
 
-            let time = typeof message.meta.time === 'number' && message.meta.time || Date.now();
+            let time = (typeof message.meta.time === 'number' && message.meta.time) || Date.now();
 
             message.logId = id;
             message.logSeq = seq;
@@ -174,7 +178,10 @@ router.get('/message/:id', (req, res, next) => {
 
             message.headers = headers.build();
             message.size = message.headers.length + message.meta.bodySize;
-            message.headers = message.headers.toString().replace(/\r/g, '').trim();
+            message.headers = message.headers
+                .toString()
+                .replace(/\r/g, '')
+                .trim();
 
             message.messages = message.messages.map((entry, i) => {
                 entry.index = i + 1;
@@ -184,7 +191,7 @@ router.get('/message/:id', (req, res, next) => {
                     entry.label = 'warning';
                     entry.nextAttempt = new Date(entry.deferred.next).toISOString();
                     entry.serverResponse = entry.deferred.response;
-                    entry.smtpLog = entry.deferred.log && entry.deferred.log.length || false;
+                    entry.smtpLog = (entry.deferred.log && entry.deferred.log.length) || false;
                 } else {
                     entry.label = 'success';
                     entry.nextAttempt = 'Whenever possible';
@@ -205,10 +212,20 @@ router.get('/log/:id/:seq', (req, res, next) => {
         }
 
         for (let i = 0, len = message.messages.length; i < len; i++) {
-
             let entry = message.messages[i];
             if (entry.seq === req.params.seq) {
-                let transaction = Array.isArray(entry.deferred.log) ? entry.deferred.log.map(row => util.format('%s [%s]: %s', new Date(row.time ? row.time : 0).toISOString(), row.level, row.message.replace(/\n/g, '\n' + ' '.repeat(48)))).join('\n') : '';
+                let transaction = Array.isArray(entry.deferred.log)
+                    ? entry.deferred.log
+                          .map(row =>
+                              util.format(
+                                  '%s [%s]: %s',
+                                  new Date(row.time ? row.time : 0).toISOString(),
+                                  row.level,
+                                  row.message.replace(/\n/g, '\n' + ' '.repeat(48))
+                              )
+                          )
+                          .join('\n')
+                    : '';
                 res.render('log', {
                     id: entry.id,
                     transaction
@@ -226,7 +243,6 @@ router.get('/fetch/:id', (req, res) => {
 });
 
 router.post('/find', (req, res, next) => {
-
     let term = (req.body.id || '').trim();
     if (!term) {
         return res.redirect('/');
@@ -248,11 +264,18 @@ router.post('/find', (req, res, next) => {
             return next(new Error('Nothing found'));
         }
 
-        let matcher = (term || '').toString().toLowerCase().replace(/[<>\s]/g, '').trim();
+        let matcher = (term || '')
+            .toString()
+            .toLowerCase()
+            .replace(/[<>\s]/g, '')
+            .trim();
         res.render('message-ids', {
             query: term,
             items: result.entries.map((item, i) => {
-                let messageId = item.messageId.replace(/</g, '').replace(/>/g, '').trim();
+                let messageId = item.messageId
+                    .replace(/</g, '')
+                    .replace(/>/g, '')
+                    .trim();
                 if (matcher) {
                     if (messageId.indexOf(matcher) === 0) {
                         messageId = '<strong>' + messageId.substr(0, matcher.length) + '</strong>' + messageId.substr(matcher.length);
@@ -266,7 +289,6 @@ router.post('/find', (req, res, next) => {
             })
         });
     });
-
 });
 
 router.get('/send', (req, res) => {
@@ -338,7 +360,6 @@ router.get('/suppressionlist', (req, res, next) => {
 });
 
 router.post('/suppressionlist/add', (req, res, next) => {
-
     let address = (req.body.address || '').toString().trim();
     let domain = (req.body.domain || '').toString().trim();
 
@@ -347,28 +368,30 @@ router.post('/suppressionlist/add', (req, res, next) => {
         return res.redirect('/suppressionlist');
     }
 
-    handler.addToSuppressionlist({
-        address,
-        domain
-    }, (err, message) => {
-        if (err) {
-            return next(err);
-        }
+    handler.addToSuppressionlist(
+        {
+            address,
+            domain
+        },
+        (err, message) => {
+            if (err) {
+                return next(err);
+            }
 
-        if (err) {
-            req.flash('danger', err.message);
-        }
+            if (err) {
+                req.flash('danger', err.message);
+            }
 
-        if (message && message.suppressed) {
-            req.flash('success', 'New entry added with id ' + message.suppressed.id);
-        }
+            if (message && message.suppressed) {
+                req.flash('success', 'New entry added with id ' + message.suppressed.id);
+            }
 
-        res.redirect('/suppressionlist');
-    });
+            res.redirect('/suppressionlist');
+        }
+    );
 });
 
 router.post('/suppressionlist/delete', (req, res, next) => {
-
     let id = (req.body.id || '').toString().trim();
 
     if (!id) {
@@ -376,23 +399,26 @@ router.post('/suppressionlist/delete', (req, res, next) => {
         return res.redirect('/suppressionlist');
     }
 
-    handler.deleteFromSuppressionlist({
-        id
-    }, (err, message) => {
-        if (err) {
-            return next(err);
-        }
+    handler.deleteFromSuppressionlist(
+        {
+            id
+        },
+        (err, message) => {
+            if (err) {
+                return next(err);
+            }
 
-        if (err) {
-            req.flash('danger', err.message);
-        }
+            if (err) {
+                req.flash('danger', err.message);
+            }
 
-        if (message && message.deleted) {
-            req.flash('success', 'Entry deleted with id ' + message.deleted);
-        }
+            if (message && message.deleted) {
+                req.flash('success', 'Entry deleted with id ' + message.deleted);
+            }
 
-        res.redirect('/suppressionlist');
-    });
+            res.redirect('/suppressionlist');
+        }
+    );
 });
 
 module.exports = router;

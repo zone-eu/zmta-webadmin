@@ -1,25 +1,26 @@
+/* eslint no-invalid-this: 0 */
+
 'use strict';
 
 const config = require('config');
-let log = require('npmlog');
+const log = require('npmlog');
 
-let express = require('express');
-let bodyParser = require('body-parser');
-let path = require('path');
-let favicon = require('serve-favicon');
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
-let session = require('express-session');
-let RedisStore = require('connect-redis')(session);
-let flash = require('connect-flash');
-let hbs = require('hbs');
-let compression = require('compression');
-let auth = require('basic-auth');
+const db = require('./lib/db');
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+const flash = require('connect-flash');
+const hbs = require('hbs');
+const auth = require('basic-auth');
 const humanize = require('humanize');
 
-let routes = require('./routes/index');
+const routes = require('./routes/index');
 
-let app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -40,13 +41,11 @@ app.disable('x-powered-by');
  * and the message is never displayed
  */
 hbs.registerHelper('flash_messages', function() {
-    // eslint-disable-line prefer-arrow-callback
     if (typeof this.flash !== 'function') {
-        // eslint-disable-line no-invalid-this
         return '';
     }
 
-    let messages = this.flash(); // eslint-disable-line no-invalid-this
+    let messages = this.flash();
     let response = [];
 
     // group messages by type
@@ -94,9 +93,6 @@ hbs.registerHelper('dec', function(options) {
     );
 });
 
-//app.use(compression());
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
 app.use(
     logger(config.httplog, {
         stream: {
@@ -115,7 +111,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
     session({
-        store: new RedisStore(config.redis),
+        store: new RedisStore({
+            client: db.redis.duplicate()
+        }),
         secret: config.secret,
         saveUninitialized: false,
         resave: false
