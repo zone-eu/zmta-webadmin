@@ -103,7 +103,7 @@ router.get('/message/:id', (req, res, next) => {
                         DROP: 'danger'
                     }[entry.action],
                     message: Object.keys(entry)
-                        .filter(key => !['t', 'e,', 'id', 'seq', 'action', '_id'].includes(key))
+                        .filter(key => !['t', 'e', 'id', 'seq', 'action', '_id'].includes(key))
                         .map(key => {
                             let value = (entry[key] || '').toString().trim();
                             switch (key) {
@@ -270,6 +270,7 @@ router.post('/find', (req, res, next) => {
                 $options: ''
             }
         })
+        .sort({ t: -1 })
         .limit(100)
         .toArray((err, entries) => {
             if (err) {
@@ -295,6 +296,7 @@ router.post('/find', (req, res, next) => {
                             messageId = messageId.substr(0, messageId.length - matcher.length) + '<strong>' + messageId.substr(-matcher.length) + '</strong>';
                         }
                     }
+                    item.created = item.t.toISOString();
                     item.messageId = '&lt;' + messageId + '&gt;';
                     item.index = i + 1;
                     return item;

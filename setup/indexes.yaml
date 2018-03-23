@@ -18,6 +18,13 @@ indexes:
 
 - collection: mids
   index:
+    name: mid_list
+    key:
+      mid: 1
+      t: -1
+
+- collection: mids
+  index:
     name: mids_autoexpire
     # autoremove log entries after expire days
     expireAfterSeconds: 0
