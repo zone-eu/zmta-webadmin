@@ -103,7 +103,7 @@ router.get('/message/:id', (req, res, next) => {
                         DROP: 'danger'
                     }[entry.action],
                     message: Object.keys(entry)
-                        .filter(key => !['time', 'id', 'seq', 'action'].includes(key))
+                        .filter(key => !['t', 'e,', 'id', 'seq', 'action', '_id'].includes(key))
                         .map(key => {
                             let value = (entry[key] || '').toString().trim();
                             switch (key) {
