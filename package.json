@@ -11,7 +11,6 @@
     "author": "Andris Reinman",
     "license": "EUPL-1.1+",
     "dependencies": {
-        "basic-auth": "2.0.0",
         "body-parser": "1.18.2",
         "connect-flash": "0.1.1",
         "connect-redis": "3.3.3",

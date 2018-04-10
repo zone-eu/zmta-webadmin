@@ -15,7 +15,6 @@ const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const flash = require('connect-flash');
 const hbs = require('hbs');
-const auth = require('basic-auth');
 const humanize = require('humanize');
 
 const routes = require('./routes/index');
@@ -163,20 +162,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// setup HTTP auth
-app.use((req, res, next) => {
-    if (!config.auth) {
-        return next();
-    }
-    let credentials = auth(req);
-    if (!credentials || credentials.name !== config.user || credentials.pass !== config.pass) {
-        res.statusCode = 401;
-        res.setHeader('WWW-Authenticate', 'Basic realm="example"');
-        res.end('Access denied');
-    } else {
-        next();
-    }
-});
+app.use(require('./lib/sitepass'));
 
 app.use('/', routes);
 
