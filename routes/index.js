@@ -420,6 +420,7 @@ router.get('/find', (req, res, next) => {
                     index: page * limit - limit + i + 1,
                     from: entry.from,
                     to: entry.to,
+                    toStr: ((entry.to && entry.to[0]) || '') + (entry.to && entry.to.length > 1 ? ' +' + (entry.to.length - 1) + ' more…' : ''),
                     mid: '<' + entry.mid + '>',
                     time: entry.t.toISOString()
                 }))
