@@ -89,7 +89,7 @@
                             MAIL FROM
                         </th>
                         <td>
-                            <a href="/find?from:{{mailFrom}}">{{mailFrom}}</a>
+                            {{mailFrom}} <a href="/find?query=from:{{mailFrom}}"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a>
                         </td>
                     </tr>
 
@@ -99,7 +99,7 @@
                         </th>
                         <td>
                             {{#each rcptTo}}
-                                <a href="/find?to:{{this}}">{{this}}</a>
+                                {{this}} <a href="/find?query=to:{{this}}"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a>
                             {{/each}}
                         </td>
                     </tr>
