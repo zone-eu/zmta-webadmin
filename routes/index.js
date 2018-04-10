@@ -271,8 +271,8 @@ router.get('/find', (req, res, next) => {
         limit: Joi.number()
             .empty('')
             .min(1)
-            .max(100)
-            .default(10)
+            .max(200)
+            .default(50)
     });
 
     let result = Joi.validate(req.query, schema, {
