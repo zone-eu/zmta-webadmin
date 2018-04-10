@@ -182,7 +182,10 @@ router.get('/message/:id', (req, res, next) => {
                 }
 
                 message.mailFrom = message.meta.from || '<>';
-                message.rcptTo = [].concat(message.meta.to || []).join(', ');
+                message.rcptTo = []
+                    .concat(message.meta.to || [])
+                    .map(a => a.trim())
+                    .filter(a => a);
 
                 message.headers = headers.build();
                 message.size = message.headers.length + message.meta.bodySize;

@@ -89,7 +89,7 @@
                             MAIL FROM
                         </th>
                         <td>
-                            {{mailFrom}}
+                            <a href="/find?from:{{mailFrom}}">{{mailFrom}}</a>
                         </td>
                     </tr>
 
@@ -98,7 +98,9 @@
                             RCPT TO
                         </th>
                         <td>
-                            {{rcptTo}}
+                            {{#each rcptTo}}
+                                <a href="/find?to:{{this}}">{{this}}</a>
+                            {{/each}}
                         </td>
                     </tr>
 
