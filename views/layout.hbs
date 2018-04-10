@@ -44,10 +44,10 @@
                         {{/if}}
                     {{/each}}
                 </ul>
-                <form class="navbar-form navbar-right" action="/find" method="post">
+                <form class="navbar-form navbar-right" action="/find" method="get">
                     <div class="form-group">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="id" placeholder="Queue or message ID..." value="{{query}}">
+                            <input type="text" class="form-control" name="query" placeholder="Queue or message ID..." value="{{query}}">
                             <span class="input-group-btn">
                 <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                             </span>

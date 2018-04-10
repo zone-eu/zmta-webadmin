@@ -11,7 +11,7 @@ httplog = "dev"
 
 secret = "a cat" # cookie secret
 maxPostSize = "5MB"
-apiServer = "http://localhost:8080" # ZoneMTA API location
+apiServer = "http://localhost:12080" # ZoneMTA API location
 counterPrefix = "zmta"
 
 # mongodb database name
@@ -26,7 +26,7 @@ level = "info"
 
 [logserver]
 # set up a log collecting server to catch message updates from zone-mta
-enabled = false
+enabled = true
 protocol = "udp4"
 host = false # allow from all
 port = 31239

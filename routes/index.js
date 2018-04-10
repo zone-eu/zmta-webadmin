@@ -7,6 +7,9 @@ const db = require('../lib/db');
 const libmime = require('libmime');
 const mailsplit = require('mailsplit');
 const util = require('util');
+const SearchString = require('search-string');
+const Joi = require('joi');
+const MongoPaging = require('mongo-cursor-pagination-node6');
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -248,57 +251,178 @@ router.get('/fetch/:id', (req, res) => {
     handler.getFetchStream(req.params.id).pipe(res);
 });
 
-router.post('/find', (req, res, next) => {
-    let term = (req.body.id || '').replace(/^[<\s]+|[>\s]+$/g, '');
-    if (!term) {
+router.get('/find', (req, res, next) => {
+    const schema = Joi.object().keys({
+        query: Joi.string()
+            .max(255)
+            .empty(''),
+        next: Joi.string()
+            .max(100)
+            .empty(''),
+        previous: Joi.string()
+            .max(100)
+            .empty(''),
+        page: Joi.number()
+            .empty('')
+            .default(1),
+        limit: Joi.number()
+            .empty('')
+            .min(1)
+            .max(100)
+            .default(10)
+    });
+
+    let result = Joi.validate(req.query, schema, {
+        abortEarly: false,
+        convert: true,
+        stripUnknown: true
+    });
+
+    if (result.error) {
+        if (result.error && result.error.details) {
+            result.error.details.forEach(detail => {
+                req.flash('danger', detail.message);
+            });
+        }
         return res.redirect('/');
     }
 
-    if (term.length > 255) {
-        term = term.substr(0, 255);
+    let cursorType, cursorValue;
+
+    if (result.value.next) {
+        cursorType = 'next';
+        cursorValue = result.value.next;
+    } else if (result.value.previous) {
+        cursorType = 'previous';
+        cursorValue = result.value.previous;
     }
 
-    if (/^[0-9a-z]{18}(\.[0-9a-z]{3})?$/i.test(term)) {
+    const searchString = SearchString.parse(result.value.query);
+    let keys = searchString.getParsedQuery();
+    let term = searchString
+        .getTextSegments()
+        .map(text =>
+            (text.text || '')
+                .toString()
+                .trim()
+                .replace(/^[<\s]+|[>\s]+$/g, '')
+        )
+        .join(' ')
+        .trim();
+
+    let query = result.value.query;
+    let page = result.value.page;
+    let limit = result.value.limit;
+    let filter = {};
+    let hasQueryKeys = false;
+
+    Object.keys(keys).forEach(key => {
+        let fkey = key.toLowerCase().trim();
+        if (['from', 'to', 'id', 'message-id'].includes(fkey)) {
+            if (fkey === 'message-id') {
+                fkey = 'mid';
+            }
+
+            filter[fkey] = keys[key]
+                .map(val =>
+                    (val || '')
+                        .toString()
+                        .trim()
+                        .replace(/^[<\s]+|[>\s]+$/g, '')
+                )
+                .join(' ')
+                .trim();
+            hasQueryKeys = true;
+        }
+        switch (fkey) {
+            case 'start': {
+                let date = new Date(keys[key].shift());
+                if (date.toString() !== 'Invalid Date') {
+                    if (!filter.t) {
+                        filter.t = {};
+                    }
+                    filter.t.$gte = date;
+                    hasQueryKeys = true;
+                }
+                break;
+            }
+
+            case 'end': {
+                let date = new Date(keys[key].shift());
+                if (date.toString() !== 'Invalid Date') {
+                    if (!filter.t) {
+                        filter.t = {};
+                    }
+                    filter.t.$lte = date;
+                    hasQueryKeys = true;
+                }
+                break;
+            }
+        }
+    });
+
+    if (!hasQueryKeys && !term) {
+        return res.redirect('/');
+    }
+
+    if (!hasQueryKeys && /^[0-9a-z]{18}(\.[0-9a-z]{3})?$/i.test(term)) {
         return res.redirect('/message/' + term);
     }
 
-    db.client
-        .collection('mids')
-        .find({
-            mid: {
-                $regex: escapeRegexStr(term),
-                $options: ''
-            }
-        })
-        .sort({ t: -1 })
-        .limit(100)
-        .toArray((err, entries) => {
+    if (term) {
+        filter.mid = {
+            $regex: escapeRegexStr(term),
+            $options: ''
+        };
+    }
+
+    db.client.collection('mids').count(filter, (err, total) => {
+        if (err) {
+            return next(err);
+        }
+
+        let opts = {
+            limit,
+            query: filter,
+            paginatedField: '_id',
+            sortAscending: false
+        };
+
+        if (cursorType === 'next') {
+            opts.next = cursorValue;
+        } else if (cursorType === 'previous') {
+            opts.previous = cursorValue;
+        }
+
+        MongoPaging.find(db.client.collection('mids'), opts, (err, result) => {
             if (err) {
                 return next(err);
             }
-            if (!entries || !entries.length) {
-                return next(new Error('Nothing found'));
+
+            if (!result.hasPrevious) {
+                page = 1;
             }
 
-            let matcher = (term || '')
-                .toString()
-                .toLowerCase()
-                .replace(/[<>\s]/g, '')
-                .trim();
             res.render('message-ids', {
-                query: term,
-                items: entries.map((item, i) => {
-                    let messageId = item.mid;
-                    if (matcher) {
-                        messageId = messageId.replace(new RegExp(escapeRegexStr(matcher)), m => '<strong>' + m + '</strong>');
-                    }
-                    item.created = item.t.toISOString();
-                    item.messageId = '&lt;' + messageId + '&gt;';
-                    item.index = i + 1;
-                    return item;
-                })
+                query,
+                total,
+                page,
+                limit,
+                previousCursor: result.hasPrevious ? result.previous : false,
+                previousPage: Math.max(page - 1, 1),
+                nextPage: Math.min(page + 1, Math.ceil(total / limit)) || 1,
+                nextCursor: result.hasNext ? result.next : false,
+                results: (result.results || []).map((entry, i) => ({
+                    id: entry.id,
+                    index: page * limit - limit + i + 1,
+                    from: entry.from,
+                    to: entry.to,
+                    mid: '<' + entry.mid + '>',
+                    time: entry.t.toISOString()
+                }))
             });
         });
+    });
 });
 
 router.get('/send', (req, res) => {

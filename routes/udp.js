@@ -34,6 +34,15 @@ module.exports = server => {
                 db.client.collection('mids').insertOne(
                     {
                         mid: (message['message-id'] || '').toString().replace(/^[<\s]+|[>\s]+$/g, ''),
+                        from: (message.from || '')
+                            .toString()
+                            .trim()
+                            .toLowerCase(),
+                        to: (message.to || '')
+                            .toString()
+                            .split(',')
+                            .map(a => a.trim().toLowerCase())
+                            .filter(a => a),
                         id: message.id,
                         t: message.t,
                         e: message.e
