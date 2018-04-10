@@ -559,6 +559,15 @@ router.post('/suppressionlist/delete', (req, res, next) => {
     );
 });
 
+router.get('/logout', (req, res, next) => {
+    req.session.regenerate(err => {
+        if (err) {
+            return next(err);
+        }
+        res.redirect('/');
+    });
+});
+
 module.exports = router;
 
 function escapeRegexStr(string) {
