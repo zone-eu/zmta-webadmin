@@ -48,14 +48,14 @@ indexes:
   index:
     name: mid_by_to_id
     key:
-      from: 1
+      to: 1
       _id: 1
 
 - collection: mids
   index:
     name: mid_by_to_reverse
     key:
-      from: 1
+      to: 1
       _id: -1
 
 - collection: mids
