@@ -4,7 +4,7 @@ user = "admin"
 pass = "secretpass"
 
 port = 8082
-host = "127.0.0.1" # set to false to listen on all interfaces
+host = "127.0.0.1" # set to false to listen on all interfaces - Set to 0.0.0.0 to allow access from external IPs.
 proxy = 1 # trust proxy headers
 
 httplog = "dev"
@@ -33,6 +33,7 @@ port = 31239
 
 [redis]
 # redis is needed to fetch delivery counters
+# make sure this configuration matches
 host = "localhost"
 port = 6379
 db = 2
