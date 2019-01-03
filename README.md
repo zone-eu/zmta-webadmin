@@ -24,7 +24,7 @@ In order to be able to access the web interface from an external computer, you n
 
 Change this line:
 host = "127.0.0.1" # set to false to listen on all interfaces
-to:
+to this:
 host = "0.0.0.0" # set to false to listen on all interfaces
 
 **NB!** For the delivery counters and top destinations to work you should add [zonemta-delivery-counters](https://github.com/andris9/zonemta-delivery-counters) plugin for your ZoneMTA application. Also make sure that you use the same redis key prefix in ZoneMTA and in ZMTA-WebAdmin.
