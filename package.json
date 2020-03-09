@@ -21,7 +21,7 @@
         "humanize": "0.0.9",
         "ioredis": "4.9.0",
         "joi": "^14.3.1",
-        "js-yaml": "3.13.0",
+        "js-yaml": "3.13.1",
         "libmime": "4.0.1",
         "mailsplit": "4.2.4",
         "mongo-cursor-pagination-node6": "^5.0.0",
