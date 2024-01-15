@@ -9,7 +9,7 @@ const mailsplit = require('mailsplit');
 const util = require('util');
 const SearchString = require('search-string');
 const Joi = require('joi');
-const MongoPaging = require('mongo-cursor-pagination-node6');
+const MongoPaging = require('mongo-cursor-pagination');
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -48,7 +48,19 @@ router.get('/zone/:zone/:type', (req, res, next) => {
         if (err) {
             return next(err);
         }
-        handler.fetchQueued(req.params.zone, req.params.type, (err, queue) => {
+
+        let sort = (req.query.sort || '').toString().toLowerCase().trim() || 'id';
+        let order = (req.query.order || '').toString().toLowerCase().trim() || 'desc';
+
+        if (!['id', 'created', 'queued'].includes(sort)) {
+            sort = 'id';
+        }
+
+        if (!['asc', 'desc'].includes(order)) {
+            order = 'desc';
+        }
+
+        handler.fetchQueued(req.params.zone, req.params.type, { sort, order }, (err, queue) => {
             if (err) {
                 return next(err);
             }
@@ -63,7 +75,18 @@ router.get('/zone/:zone/:type', (req, res, next) => {
                 items: queue.list.map((item, i) => {
                     item.index = i + 1;
                     return item;
-                })
+                }),
+
+                sortId: sort === 'id',
+                sortCreated: sort === 'created',
+                sortQueued: sort === 'queued',
+
+                sortOrderAsc: order === 'asc',
+                sortOrderDesc: order === 'desc',
+
+                sortOrder: order,
+
+                sortBaseUrl: `/zone/${encodeURIComponent(req.params.zone)}/${encodeURIComponent(req.params.type)}?s=1`
             });
         });
     });
@@ -252,7 +275,7 @@ router.get('/fetch/:id', (req, res) => {
 });
 
 router.get('/find', (req, res, next) => {
-    const schema = Joi.object().keys({
+    const schema = Joi.object({
         query: Joi.string().max(255).empty(''),
         next: Joi.string().max(100).empty(''),
         previous: Joi.string().max(100).empty(''),
@@ -260,7 +283,7 @@ router.get('/find', (req, res, next) => {
         limit: Joi.number().empty('').min(1).max(200).default(50)
     });
 
-    let result = Joi.validate(req.query, schema, {
+    let result = schema.validate(req.query, {
         abortEarly: false,
         convert: true,
         stripUnknown: true

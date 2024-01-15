@@ -18,23 +18,105 @@
 
         {{#if items}}
 
+
         <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover table-condensed">
 
                 <thead>
 
                     <tr>
-                        <th class="col-md-1">
-                            #
-                        </th>
-
+                        <th class="col-md-1">#</th>
                         <th>
-                            ID
-                        </th>
+                            <div style="display:flex; justify-content: space-between; flex-direction: row;">
+                                <div>
+                                    ID
+                                </div>
 
-                        <th>
-                            Recipient
+                                <div>
+
+                                    {{#if sortId}}
+
+                                    <a
+                                        href="{{sortBaseUrl}}&amp;sort=id&amp;order={{#if sortOrderAsc}}desc{{else}}asc{{/if}}">
+                                        <span
+                                            class="glyphicon glyphicon-sort-by-attributes{{#if sortOrderDesc}}-alt{{/if}}"
+                                            aria-hidden="true"></span>
+                                    </a>
+
+                                    {{else}}
+                                    <a href="{{sortBaseUrl}}&amp;sort=id&amp;order=desc">
+                                        <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+                                    </a>
+                                    {{/if}}
+
+
+                                </div>
+
+                            </div>
+
                         </th>
+                        <th>Recipient</th>
+                        <th>
+
+                            <div style="display:flex; justify-content: space-between; flex-direction: row;">
+                                <div>
+                                    Created
+                                </div>
+
+                                <div>
+
+                                    {{#if sortCreated}}
+
+                                    <a
+                                        href="{{sortBaseUrl}}&amp;sort=created&amp;order={{#if sortOrderAsc}}desc{{else}}asc{{/if}}">
+                                        <span
+                                            class="glyphicon glyphicon-sort-by-attributes{{#if sortOrderDesc}}-alt{{/if}}"
+                                            aria-hidden="true"></span>
+                                    </a>
+
+                                    {{else}}
+                                    <a href="{{sortBaseUrl}}&amp;sort=created&amp;order=desc">
+                                        <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+                                    </a>
+                                    {{/if}}
+
+
+                                </div>
+
+                            </div>
+
+                        </th>
+                        <th>
+
+                            <div style="display:flex; justify-content: space-between; flex-direction: row;">
+                                <div>
+                                    Scheduled
+                                </div>
+
+                                <div>
+
+                                    {{#if sortQueued}}
+
+                                    <a
+                                        href="{{sortBaseUrl}}&amp;sort=queued&amp;order={{#if sortOrderAsc}}desc{{else}}asc{{/if}}">
+                                        <span
+                                            class="glyphicon glyphicon-sort-by-attributes{{#if sortOrderDesc}}-alt{{/if}}"
+                                            aria-hidden="true"></span>
+                                    </a>
+
+                                    {{else}}
+                                    <a href="{{sortBaseUrl}}&amp;sort=queued&amp;order=desc">
+                                        <span class="glyphicon glyphicon-sort" aria-hidden="true"></span>
+                                    </a>
+                                    {{/if}}
+
+
+                                </div>
+
+                            </div>
+
+                        </th>
+                        <th>Failures</th>
                     </tr>
 
                 </thead>
@@ -52,6 +134,9 @@
                         <td>
                             {{recipient}}
                         </td>
+                        <td class="datestring" title="{{created}}">{{created}}</td>
+                        <td class="datestring" title="{{queued}}">{{queued}}</td>
+                        <td>{{deferred}}</td>
                     </tr>
                     {{/each}}
 
