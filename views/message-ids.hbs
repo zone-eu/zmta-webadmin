@@ -40,31 +40,31 @@
         <tbody>
 
             {{#each results}}
-                <tr>
-                    <th>
-                        {{index}}
-                    </th>
-                    <td>
-                        <a href="/message/{{id}}">{{id}}</a>
-                    </td>
-                    <td>
-                        {{from}}
-                    </td>
-                    <td>
-                        {{toStr}}
-                    </td>
-                    <td class="datestring" title="{{time}}">
-                        {{time}}
-                    </td>
-                    <td>
-                        {{mid}}
-                    </td>
-                    {{#each extraFields}}
-                        <th>
-                            {{this}}
-                        </th>
-                    {{/each}}
-                </tr>
+            <tr>
+                <th>
+                    {{index}}
+                </th>
+                <td>
+                    <a href="/message/{{id}}">{{id}}</a>
+                </td>
+                <td>
+                    {{from}}
+                </td>
+                <td>
+                    {{toStr}}
+                </td>
+                <td class="datestring" title="{{time}}">
+                    {{time}}
+                </td>
+                <td>
+                    {{mid}}
+                </td>
+                {{#each extraFields}}
+                <th>
+                    {{this}}
+                </th>
+                {{/each}}
+            </tr>
             {{/each}}
 
         </tbody>
@@ -74,9 +74,11 @@
 <nav aria-label="nav">
     <ul class="pager">
         {{#if previousCursor}}
-            <li class="previous"><a href="/find?previous={{previousCursor}}&amp;page={{previousPage}}&amp;limit={{limit}}&amp;query={{query}}"><span aria-hidden="true">&larr;</span> Newer</a></li>
+        <li class="previous"><a
+                href="/find?previous={{previousCursor}}&amp;page={{previousPage}}&amp;limit={{limit}}&amp;query={{query}}"><span
+                    aria-hidden="true">&larr;</span> Newer</a></li>
         {{else}}
-            <li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Newer</a></li>
+        <li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Newer</a></li>
         {{/if}}
 
         <li style="display: inline-block; padding-top: 7px;">
@@ -84,9 +86,11 @@
         </li>
 
         {{#if nextCursor}}
-            <li class="next"><a href="/find?next={{nextCursor}}&amp;page={{nextPage}}&amp;limit={{limit}}&amp;query={{query}}">Older <span aria-hidden="true">&rarr;</span></a></li>
+        <li class="next"><a
+                href="/find?next={{nextCursor}}&amp;page={{nextPage}}&amp;limit={{limit}}&amp;query={{query}}">Older
+                <span aria-hidden="true">&rarr;</span></a></li>
         {{else}}
-            <li class="next disabled"><a href="#">Older <span aria-hidden="true">&rarr;</span></a></li>
+        <li class="next disabled"><a href="#">Older <span aria-hidden="true">&rarr;</span></a></li>
         {{/if}}
     </ul>
 </nav>
@@ -96,18 +100,27 @@
 </p>
 <ul>
     <li>
-        <code>from:addressvalue</code> searches for messages where SMTP envelope MAIL FROM address is <code>addressvalue</code>. For example search query <code><a href="/find?query=from:andris@ethereal.email">from:andris@ethereal.email</a></code> searches for all messages sent from "andris@ethereal.email". This might not be the same address that is used in message headers.
+        <code>from:addressvalue</code> searches for messages where SMTP envelope MAIL FROM address is
+        <code>addressvalue</code>. For example search query
+        <code><a href="/find?query=from:andris@ethereal.email">from:andris@ethereal.email</a></code> searches for all
+        messages sent from "andris@ethereal.email". This might not be the same address that is used in message headers.
     </li>
     <li>
-        <code>to:addressvalue</code> searches for messages where SMTP envelope RCPT TO address is <code>addressvalue</code> For example search query <code><a href="/find?query=to:andris@ethereal.email">to:andris@ethereal.email</a></code> searches for all messages sent to "andris@ethereal.email". This might not be the same address that is used in message headers.
+        <code>to:addressvalue</code> searches for messages where SMTP envelope RCPT TO address is
+        <code>addressvalue</code> For example search query
+        <code><a href="/find?query=to:andris@ethereal.email">to:andris@ethereal.email</a></code> searches for all
+        messages sent to "andris@ethereal.email". This might not be the same address that is used in message headers.
     </li>
     <li>
-        <code>start:date</code> searches for messages that are sent later than provided time value. Date value should be <em>2018-04-10T09:14:46Z</em> formatted (T between date and time values, Z in the end to indicate UTC).
+        <code>start:date</code> searches for messages that are sent later than provided time value. Date value should be
+        <em>2018-04-10T09:14:46Z</em> formatted (T between date and time values, Z in the end to indicate UTC).
     </li>
     <li>
-        <code>end:date</code> searches for messages that are sent earlier than provided time value. Date value should be <em>2018-04-10T09:14:46Z</em> formatted.
+        <code>end:date</code> searches for messages that are sent earlier than provided time value. Date value should be
+        <em>2018-04-10T09:14:46Z</em> formatted.
     </li>
     <li>
-        <code>message-id:msgid</code> searches for messages where Message-ID equals with provided value. By default when searching without the prefix, then partial match is used which might be quite slow.
+        <code>message-id:msgid</code> searches for messages where Message-ID equals with provided value. By default when
+        searching without the prefix, then partial match is used which might be quite slow.
     </li>
 </ul>

@@ -1,11 +1,13 @@
 <h2><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Suppression list</h2>
 
 <p>
-    This page lists all addresses and domains that are suppressed. All mail sent to these destinations are silently dropped.
+    This page lists all addresses and domains that are suppressed. All mail sent to these destinations are silently
+    dropped.
 </p>
 
 <p>
-    Suppression list entries are exact matches only, no partial matches or regular expressions allowed. Unicode domains and usernames are allowed.
+    Suppression list entries are exact matches only, no partial matches or regular expressions allowed. Unicode domains
+    and usernames are allowed.
 </p>
 
 <form method="post" action="/suppressionlist/add" onsubmit="return confirm('Are you sure?')">
@@ -54,27 +56,29 @@
         <tbody>
 
             {{#each items}}
-                <tr>
-                    <th>
-                        {{index}}
-                    </th>
-                    <td>
-                        {{address}}
-                    </td>
-                    <td>
-                        {{domain}}
-                    </td>
-                    <td class="datestring" title="{{time}}">
-                        {{time}}
-                    </td>
-                    <td>
-                        <form method="post" id="delete-form-{{id}}" action="/suppressionlist/delete" onsubmit="return confirm('Are you sure?')">
-                            <input type="hidden" name="id" value="{{id}}" />
-                        </form>
+            <tr>
+                <th>
+                    {{index}}
+                </th>
+                <td>
+                    {{address}}
+                </td>
+                <td>
+                    {{domain}}
+                </td>
+                <td class="datestring" title="{{time}}">
+                    {{time}}
+                </td>
+                <td>
+                    <form method="post" id="delete-form-{{id}}" action="/suppressionlist/delete"
+                        onsubmit="return confirm('Are you sure?')">
+                        <input type="hidden" name="id" value="{{id}}" />
+                    </form>
 
-                        <button type="submit" form="delete-form-{{id}}" class="btn btn-link"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
-                    </td>
-                </tr>
+                    <button type="submit" form="delete-form-{{id}}" class="btn btn-link"><span
+                            class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+                </td>
+            </tr>
             {{/each}}
 
         </tbody>

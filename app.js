@@ -39,7 +39,7 @@ app.disable('x-powered-by');
  * in a situation where we consume a flash messages but then comes a redirect
  * and the message is never displayed
  */
-hbs.registerHelper('flash_messages', function() {
+hbs.registerHelper('flash_messages', function () {
     if (typeof this.flash !== 'function') {
         return '';
     }
@@ -78,14 +78,14 @@ hbs.registerHelper('flash_messages', function() {
     return new hbs.handlebars.SafeString(response.join('\n'));
 });
 
-hbs.registerHelper('num', function(options) {
+hbs.registerHelper('num', function (options) {
     // eslint-disable-line prefer-arrow-callback
     return new hbs.handlebars.SafeString(
         humanize.numberFormat(options.fn(this), 0, ',', ' ') // eslint-disable-line no-invalid-this
     );
 });
 
-hbs.registerHelper('dec', function(options) {
+hbs.registerHelper('dec', function (options) {
     // eslint-disable-line prefer-arrow-callback
     return new hbs.handlebars.SafeString(
         humanize.numberFormat(options.fn(this), 3, ',', ' ') // eslint-disable-line no-invalid-this

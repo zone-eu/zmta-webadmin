@@ -189,10 +189,7 @@ router.get('/message/:id', (req, res, next) => {
 
                 message.headers = headers.build();
                 message.size = message.headers.length + message.meta.bodySize;
-                message.headers = message.headers
-                    .toString()
-                    .replace(/\r/g, '')
-                    .trim();
+                message.headers = message.headers.toString().replace(/\r/g, '').trim();
 
                 message.messages = message.messages.map((entry, i) => {
                     entry.index = i + 1;
@@ -256,23 +253,11 @@ router.get('/fetch/:id', (req, res) => {
 
 router.get('/find', (req, res, next) => {
     const schema = Joi.object().keys({
-        query: Joi.string()
-            .max(255)
-            .empty(''),
-        next: Joi.string()
-            .max(100)
-            .empty(''),
-        previous: Joi.string()
-            .max(100)
-            .empty(''),
-        page: Joi.number()
-            .empty('')
-            .default(1),
-        limit: Joi.number()
-            .empty('')
-            .min(1)
-            .max(200)
-            .default(50)
+        query: Joi.string().max(255).empty(''),
+        next: Joi.string().max(100).empty(''),
+        previous: Joi.string().max(100).empty(''),
+        page: Joi.number().empty('').default(1),
+        limit: Joi.number().empty('').min(1).max(200).default(50)
     });
 
     let result = Joi.validate(req.query, schema, {

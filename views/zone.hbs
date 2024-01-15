@@ -1,8 +1,11 @@
-<h2><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <a href="/zone/{{zone}}/{{type}}">{{zone}}</a></h2>
+<h2><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <a href="/zone/{{zone}}/{{type}}">{{zone}}</a>
+</h2>
 
 <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="/zone/{{zone}}/active">Active{{#if counter.active.rows}} <span class="badge">{{counter.active.rows}}</span>{{/if}}</a></li>
-    <li role="presentation" class="{{#if isDeferred}}active{{/if}}"><a href="/zone/{{zone}}/deferred">Deferred{{#if counter.deferred.rows}}  <span class="badge">{{counter.deferred.rows}}</span>{{/if}}</a></li>
+    <li role="presentation" class="{{#if isActive}}active{{/if}}"><a href="/zone/{{zone}}/active">Active{{#if
+            counter.active.rows}} <span class="badge">{{counter.active.rows}}</span>{{/if}}</a></li>
+    <li role="presentation" class="{{#if isDeferred}}active{{/if}}"><a href="/zone/{{zone}}/deferred">Deferred{{#if
+            counter.deferred.rows}} <span class="badge">{{counter.deferred.rows}}</span>{{/if}}</a></li>
 </ul>
 
 <!-- Tab panes -->
@@ -15,50 +18,50 @@
 
         {{#if items}}
 
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover table-condensed">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover table-condensed">
 
-                    <thead>
+                <thead>
 
-                        <tr>
-                            <th class="col-md-1">
-                                #
-                            </th>
+                    <tr>
+                        <th class="col-md-1">
+                            #
+                        </th>
 
-                            <th>
-                                ID
-                            </th>
+                        <th>
+                            ID
+                        </th>
 
-                            <th>
-                                Recipient
-                            </th>
-                        </tr>
+                        <th>
+                            Recipient
+                        </th>
+                    </tr>
 
-                    </thead>
+                </thead>
 
-                    <tbody>
+                <tbody>
 
-                        {{#each items}}
-                            <tr>
-                                <th>
-                                    {{index}}
-                                </th>
-                                <td>
-                                    <a href="/message/{{id}}">{{id}}</a>
-                                </td>
-                                <td>
-                                    {{recipient}}
-                                </td>
-                            </tr>
-                        {{/each}}
+                    {{#each items}}
+                    <tr>
+                        <th>
+                            {{index}}
+                        </th>
+                        <td>
+                            <a href="/message/{{id}}">{{id}}</a>
+                        </td>
+                        <td>
+                            {{recipient}}
+                        </td>
+                    </tr>
+                    {{/each}}
 
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
+        </div>
         {{else}}
-            <p>
-                Nothing to show here
-            </p>
+        <p>
+            Nothing to show here
+        </p>
         {{/if}}
 
     </div>

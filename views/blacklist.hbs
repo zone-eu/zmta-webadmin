@@ -1,7 +1,8 @@
 <h2><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Blacklisted addresses</h2>
 
 <p>
-    This page lists all domains which have blacklisted a sending IP address. Entries expire in 6 hours but if the issue is not resolved, the IP gets re-added to this list again.
+    This page lists all domains which have blacklisted a sending IP address. Entries expire in 6 hours but if the issue
+    is not resolved, the IP gets re-added to this list again.
 </p>
 
 <div class="table-responsive">
@@ -40,26 +41,26 @@
         <tbody>
 
             {{#each items}}
-                <tr>
-                    <th>
-                        {{index}}
-                    </th>
-                    <td class="datestring" title="{{time}}">
-                        {{time}}
-                    </td>
-                    <td>
-                        {{address}}
-                    </td>
-                    <td>
-                        {{domain}}
-                    </td>
-                    <td>
-                        <a href="/message/{{id}}">{{id}}.{{seq}}</a>
-                    </td>
-                    <td>
-                        <small>{{response}}</small>
-                    </td>
-                </tr>
+            <tr>
+                <th>
+                    {{index}}
+                </th>
+                <td class="datestring" title="{{time}}">
+                    {{time}}
+                </td>
+                <td>
+                    {{address}}
+                </td>
+                <td>
+                    {{domain}}
+                </td>
+                <td>
+                    <a href="/message/{{id}}">{{id}}.{{seq}}</a>
+                </td>
+                <td>
+                    <small>{{response}}</small>
+                </td>
+            </tr>
             {{/each}}
 
         </tbody>

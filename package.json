@@ -6,7 +6,8 @@
     "main": "server.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node server.js"
+        "start": "node server.js",
+        "update": "rm -rf node_modules package-lock.json && ncu -u && npm install"
     },
     "author": "Andris Reinman",
     "license": "EUPL-1.1+",
@@ -20,17 +21,21 @@
         "hbs": "4.0.3",
         "humanize": "0.0.9",
         "ioredis": "4.9.0",
-        "joi": "^14.3.1",
+        "joi": "14.3.1",
         "js-yaml": "3.13.0",
         "libmime": "4.0.1",
         "mailsplit": "4.2.4",
-        "mongo-cursor-pagination-node6": "^5.0.0",
+        "mongo-cursor-pagination-node6": "5.0.0",
         "mongodb": "3.2.2",
         "morgan": "1.9.1",
         "msgpack-js": "0.3.0",
         "npmlog": "4.1.2",
         "request": "2.88.0",
-        "search-string": "^3.1.0",
+        "search-string": "3.1.0",
         "wild-config": "1.4.0"
+    },
+    "devDependencies": {
+        "eslint-config-nodemailer": "^1.2.0",
+        "eslint-config-prettier": "^9.1.0"
     }
 }

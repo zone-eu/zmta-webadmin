@@ -1,10 +1,12 @@
-<h2><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <a href="/message/{{meta.id}}">{{meta.id}}</a></h2>
+<h2><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <a href="/message/{{meta.id}}">{{meta.id}}</a>
+</h2>
 
 <div>
 
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#envelope" aria-controls="envelope" role="tab" data-toggle="tab">Envelope</a></li>
+        <li role="presentation" class="active"><a href="#envelope" aria-controls="envelope" role="tab"
+                data-toggle="tab">Envelope</a></li>
         <li role="presentation"><a href="#info" aria-controls="info" role="tab" data-toggle="tab">Message Info</a></li>
         <li role="presentation"><a href="#headers" aria-controls="headers" role="tab" data-toggle="tab">Headers</a></li>
     </ul>
@@ -45,14 +47,14 @@
                     </tr>
 
                     {{#if meta.interface}}
-                        <tr>
-                            <th>
-                                Interface
-                            </th>
-                            <td>
-                                {{meta.interface}}
-                            </td>
-                        </tr>
+                    <tr>
+                        <th>
+                            Interface
+                        </th>
+                        <td>
+                            {{meta.interface}}
+                        </td>
+                    </tr>
                     {{/if}}
 
                     <tr>
@@ -65,14 +67,14 @@
                     </tr>
 
                     {{#if meta.user}}
-                        <tr>
-                            <th>
-                                User
-                            </th>
-                            <td>
-                                {{meta.user}}
-                            </td>
-                        </tr>
+                    <tr>
+                        <th>
+                            User
+                        </th>
+                        <td>
+                            {{meta.user}}
+                        </td>
+                    </tr>
                     {{/if}}
 
                     <tr>
@@ -89,7 +91,8 @@
                             MAIL FROM
                         </th>
                         <td>
-                            {{mailFrom}} <a href="/find?query=from:{{mailFrom}}"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a>
+                            {{mailFrom}} <a href="/find?query=from:{{mailFrom}}"><span
+                                    class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a>
                         </td>
                     </tr>
 
@@ -99,7 +102,8 @@
                         </th>
                         <td>
                             {{#each rcptTo}}
-                                {{this}} <a href="/find?query=to:{{this}}"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a>
+                            {{this}} <a href="/find?query=to:{{this}}"><span class="glyphicon glyphicon-zoom-in"
+                                    aria-hidden="true"></span></a>
                             {{/each}}
                         </td>
                     </tr>
@@ -115,36 +119,38 @@
                     </tr>
 
                     {{#if spamStatus}}
-                        <tr>
-                            <th>
-                                Spam Status
-                            </th>
-                            <td>
-                                <span class="label label-{{spamLabel}}">{{spamText}} ({{spamScore}})</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                Spam Tests
-                            </th>
-                            <td>
-                                <small>{{spamTests}}</small>
-                            </td>
-                        </tr>
+                    <tr>
+                        <th>
+                            Spam Status
+                        </th>
+                        <td>
+                            <span class="label label-{{spamLabel}}">{{spamText}} ({{spamScore}})</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Spam Tests
+                        </th>
+                        <td>
+                            <small>{{spamTests}}</small>
+                        </td>
+                    </tr>
                     {{/if}}
                     {{#if messages}}
-                        <tr>
-                            <th>
-                                Actions
-                            </th>
-                            <td>
-                                <button type="submit" form="messages-delete" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button>
+                    <tr>
+                        <th>
+                            Actions
+                        </th>
+                        <td>
+                            <button type="submit" form="messages-delete" class="btn btn-danger btn-xs"><span
+                                    class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button>
 
-                                {{#if hasDeferred}}
-                                    <button type="submit" form="messages-send" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> Send now</button>
-                                {{/if}}
-                            </td>
-                        </tr>
+                            {{#if hasDeferred}}
+                            <button type="submit" form="messages-send" class="btn btn-default btn-xs"><span
+                                    class="glyphicon glyphicon-send" aria-hidden="true"></span> Send now</button>
+                            {{/if}}
+                        </td>
+                    </tr>
                     {{/if}}
                 </table>
             </div>
@@ -156,69 +162,69 @@
                 <table class="table table-bordered">
 
                     {{#if meta.parsedEnvelope.from}}
-                        <tr>
-                            <th class="col-md-2">
-                                From:
-                            </th>
-                            <td>
-                                {{meta.parsedEnvelope.from}}
-                            </td>
-                        </tr>
+                    <tr>
+                        <th class="col-md-2">
+                            From:
+                        </th>
+                        <td>
+                            {{meta.parsedEnvelope.from}}
+                        </td>
+                    </tr>
                     {{/if}}
 
                     {{#if meta.parsedEnvelope.replyTo}}
-                        <tr>
-                            <th class="col-md-2">
-                                Reply-To:
-                            </th>
-                            <td>
-                                {{meta.parsedEnvelope.replyTo}}
-                            </td>
-                        </tr>
+                    <tr>
+                        <th class="col-md-2">
+                            Reply-To:
+                        </th>
+                        <td>
+                            {{meta.parsedEnvelope.replyTo}}
+                        </td>
+                    </tr>
                     {{/if}}
 
                     {{#if meta.parsedEnvelope.sender}}
-                        <tr>
-                            <th class="col-md-2">
-                                Sender:
-                            </th>
-                            <td>
-                                {{meta.parsedEnvelope.sender}}
-                            </td>
-                        </tr>
+                    <tr>
+                        <th class="col-md-2">
+                            Sender:
+                        </th>
+                        <td>
+                            {{meta.parsedEnvelope.sender}}
+                        </td>
+                    </tr>
                     {{/if}}
 
                     {{#if meta.parsedEnvelope.to}}
-                        <tr>
-                            <th class="col-md-2">
-                                To:
-                            </th>
-                            <td>
-                                {{meta.parsedEnvelope.to}}
-                            </td>
-                        </tr>
+                    <tr>
+                        <th class="col-md-2">
+                            To:
+                        </th>
+                        <td>
+                            {{meta.parsedEnvelope.to}}
+                        </td>
+                    </tr>
                     {{/if}}
 
                     {{#if meta.parsedEnvelope.cc}}
-                        <tr>
-                            <th class="col-md-2">
-                                Cc:
-                            </th>
-                            <td>
-                                {{meta.parsedEnvelope.cc}}
-                            </td>
-                        </tr>
+                    <tr>
+                        <th class="col-md-2">
+                            Cc:
+                        </th>
+                        <td>
+                            {{meta.parsedEnvelope.cc}}
+                        </td>
+                    </tr>
                     {{/if}}
 
                     {{#if meta.parsedEnvelope.bcc}}
-                        <tr>
-                            <th class="col-md-2">
-                                Bcc:
-                            </th>
-                            <td>
-                                {{meta.parsedEnvelope.bcc}}
-                            </td>
-                        </tr>
+                    <tr>
+                        <th class="col-md-2">
+                            Bcc:
+                        </th>
+                        <td>
+                            {{meta.parsedEnvelope.bcc}}
+                        </td>
+                    </tr>
                     {{/if}}
 
                     <tr>
@@ -231,14 +237,14 @@
                     </tr>
 
                     {{#if subject}}
-                        <tr>
-                            <th class="col-md-2">
-                                Subject:
-                            </th>
-                            <td>
-                                {{subject}}
-                            </td>
-                        </tr>
+                    <tr>
+                        <th class="col-md-2">
+                            Subject:
+                        </th>
+                        <td>
+                            {{subject}}
+                        </td>
+                    </tr>
                     {{/if}}
 
                     <tr>
@@ -255,7 +261,8 @@
                             Raw source
                         </th>
                         <td>
-                            <a href="/fetch/{{meta.id}}"><span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span> Download</a> {{size}} B
+                            <a href="/fetch/{{meta.id}}"><span class="glyphicon glyphicon-cloud-download"
+                                    aria-hidden="true"></span> Download</a> {{size}} B
                         </td>
                     </tr>
 
@@ -276,174 +283,182 @@
 <hr />
 
 {{#if messages}}
-    <div class="panel panel-default">
-        <!-- Default panel contents -->
-        <div class="panel-heading">
-            <div>
-                Queued messages
-            </div>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped table-hover table-condensed">
-                <thead>
-                    <tr>
-                        <th class="col-md-1">
-                            #
-                        </th>
-
-                        <th>
-                            Queue ID
-                        </th>
-                        <th>
-                            Zone
-                        </th>
-
-                        <th>
-                            Recipient
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-                        <th>
-                            Next Attempt
-                        </th>
-                        <th>
-                            Server Response
-                        </th>
-                        <th>
-                            &nbsp;
-                        </th>
-                    </tr>
-
-                </thead>
-
-                <tbody>
-                    {{#each messages}}
-                        <tr>
-
-                            <th>
-                                {{index}}
-                            </th>
-                            <td>
-                                <a href="/message/{{id}}.{{seq}}#logentries">{{id}}.{{seq}}</a>
-                            </td>
-                            <td>
-                                <a href="/zone/{{zone}}/active">{{zone}}</a>
-                            </td>
-                            <td>
-                                {{recipient}}
-                            </td>
-                            <td>
-                                {{#if lock}}
-                                    <span class="label label-primary" title="Locked by {{lock.lockOwner}}">DELIVERY</span>
-                                {{else}}
-                                    <span class="label label-{{label}}">{{status}}</span>
-                                {{/if}}
-                            </td>
-                            <td class="datestring-relative" title="{{nextAttempt}}">
-                                {{#if lock}}
-                                    Delivery in process
-                                {{else}}
-                                    {{nextAttempt}}
-                                {{/if}}
-                            </td>
-                            <td>
-                                <small>{{serverResponse}}
-                                {{#if smtpLog}}
-                                    <a href="/log/{{id}}/{{seq}}"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a>
-                                {{/if}}
-                                </small>
-                            </td>
-                            <td>
-                                <form method="post" id="delete-form-{{id}}" action="/delete" onsubmit="return confirm('Are you sure?')">
-                                    <input type="hidden" name="id" value="{{id}}" />
-                                    <input type="hidden" name="seq" value="{{seq}}" />
-
-                                </form>
-
-                                <form method="post" id="send-form-{{id}}" action="/send-now" onsubmit="return confirm('Are you sure?')">
-                                    <input type="hidden" name="id" value="{{id}}" />
-                                    <input type="hidden" name="seq" value="{{seq}}" />
-                                </form>
-
-                                <button type="submit" form="delete-form-{{id}}" class="btn btn-link"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
-
-                                {{#if deferred}}
-                                    <button type="submit" form="send-form-{{id}}" class="btn btn-link"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></button>
-                                {{/if}}
-                            </td>
-                        </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+<div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        <div>
+            Queued messages
         </div>
     </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-condensed">
+            <thead>
+                <tr>
+                    <th class="col-md-1">
+                        #
+                    </th>
+
+                    <th>
+                        Queue ID
+                    </th>
+                    <th>
+                        Zone
+                    </th>
+
+                    <th>
+                        Recipient
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Next Attempt
+                    </th>
+                    <th>
+                        Server Response
+                    </th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+                {{#each messages}}
+                <tr>
+
+                    <th>
+                        {{index}}
+                    </th>
+                    <td>
+                        <a href="/message/{{id}}.{{seq}}#logentries">{{id}}.{{seq}}</a>
+                    </td>
+                    <td>
+                        <a href="/zone/{{zone}}/active">{{zone}}</a>
+                    </td>
+                    <td>
+                        {{recipient}}
+                    </td>
+                    <td>
+                        {{#if lock}}
+                        <span class="label label-primary" title="Locked by {{lock.lockOwner}}">DELIVERY</span>
+                        {{else}}
+                        <span class="label label-{{label}}">{{status}}</span>
+                        {{/if}}
+                    </td>
+                    <td class="datestring-relative" title="{{nextAttempt}}">
+                        {{#if lock}}
+                        Delivery in process
+                        {{else}}
+                        {{nextAttempt}}
+                        {{/if}}
+                    </td>
+                    <td>
+                        <small>{{serverResponse}}
+                            {{#if smtpLog}}
+                            <a href="/log/{{id}}/{{seq}}"><span class="glyphicon glyphicon-search"
+                                    aria-hidden="true"></span></a>
+                            {{/if}}
+                        </small>
+                    </td>
+                    <td>
+                        <form method="post" id="delete-form-{{id}}" action="/delete"
+                            onsubmit="return confirm('Are you sure?')">
+                            <input type="hidden" name="id" value="{{id}}" />
+                            <input type="hidden" name="seq" value="{{seq}}" />
+
+                        </form>
+
+                        <form method="post" id="send-form-{{id}}" action="/send-now"
+                            onsubmit="return confirm('Are you sure?')">
+                            <input type="hidden" name="id" value="{{id}}" />
+                            <input type="hidden" name="seq" value="{{seq}}" />
+                        </form>
+
+                        <button type="submit" form="delete-form-{{id}}" class="btn btn-link"><span
+                                class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
+                        {{#if deferred}}
+                        <button type="submit" form="send-form-{{id}}" class="btn btn-link"><span
+                                class="glyphicon glyphicon-send" aria-hidden="true"></span></button>
+                        {{/if}}
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
 {{/if}}
 
 
 {{#if logEntries}}
-    <div class="panel panel-default" id="logentries">
-        <!-- Default panel contents -->
-        <div class="panel-heading">
-            <div>
-                Log entries for {{logId}}
-                {{#if logSeq}}
-                    <span class="label label-default">{{logSeq}}{{#if seqTo}} – {{seqTo}}{{/if}}</span> (<a href="/message/{{logId}}#logentries">clear filter</a>)
-                {{/if}}
-            </div>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Entry
-                        </th>
-                        <th>
-                            Action
-                        </th>
-                        <th>
-                            Data
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each logEntries}}
-                        <tr>
-                            <td>
-                                <small><a href="/message/{{id}}#logentries">{{id}}</a></small><br />
-                                <small class="datestring" title="{{time}}">{{time}}</small>
-                            </td>
-                            <td>
-                                {{#if actionLabel}}
-                                    <span class="label label-{{actionLabel}}">{{action}}</span>
-                                {{else}}
-                                    {{action}}
-                                {{/if}}
-                            </td>
-                            <td class="col-md-8">
-                                <button class="btn btn-link btn-xs" type="button" data-toggle="collapse" data-target="#panel{{@index}}" aria-expanded="false" aria-controls="collapseExample">Details</button>
-                                <div id="panel{{@index}}" class="table-responsive collapse">
-                                    <table class="table table-condensed">
-                                        {{#each message}}
-                                            <tr>
-                                                <td>
-                                                    {{key}}
-                                                </td>
-                                                <td>
-                                                    <textarea class="form-control input-sm" rows="1" readonly>{{value}}</textarea>
-                                                </td>
-                                            </tr>
-                                        {{/each}}
-                                    </table>
-                                </div>
-                            </td>
-                        </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+<div class="panel panel-default" id="logentries">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        <div>
+            Log entries for {{logId}}
+            {{#if logSeq}}
+            <span class="label label-default">{{logSeq}}{{#if seqTo}} – {{seqTo}}{{/if}}</span> (<a
+                href="/message/{{logId}}#logentries">clear filter</a>)
+            {{/if}}
         </div>
     </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Entry
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Data
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each logEntries}}
+                <tr>
+                    <td>
+                        <small><a href="/message/{{id}}#logentries">{{id}}</a></small><br />
+                        <small class="datestring" title="{{time}}">{{time}}</small>
+                    </td>
+                    <td>
+                        {{#if actionLabel}}
+                        <span class="label label-{{actionLabel}}">{{action}}</span>
+                        {{else}}
+                        {{action}}
+                        {{/if}}
+                    </td>
+                    <td class="col-md-8">
+                        <button class="btn btn-link btn-xs" type="button" data-toggle="collapse"
+                            data-target="#panel{{@index}}" aria-expanded="false"
+                            aria-controls="collapseExample">Details</button>
+                        <div id="panel{{@index}}" class="table-responsive collapse">
+                            <table class="table table-condensed">
+                                {{#each message}}
+                                <tr>
+                                    <td>
+                                        {{key}}
+                                    </td>
+                                    <td>
+                                        <textarea class="form-control input-sm" rows="1" readonly>{{value}}</textarea>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
 {{/if}}

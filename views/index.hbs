@@ -39,39 +39,40 @@
         <tbody>
 
             {{#each zones}}
-                <tr>
-                    <th>
-                        {{index}}
-                    </th>
-                    <th>
-                        <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <a href="/zone/{{name}}/active">{{name}}</a>
-                    </th>
-                    <td>
-                        <div class="text-right">
-                            {{#num}}{{active}}{{/num}}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="text-right">
-                            {{#num}}{{deferred}}{{/num}}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="text-right">
-                            {{#num}}{{counter_bounced}}{{/num}}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="text-right">
-                            {{#num}}{{counter_delivered}}{{/num}}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="text-right">
-                            {{#dec}}{{speed}}{{/dec}}
-                        </div>
-                    </td>
-                </tr>
+            <tr>
+                <th>
+                    {{index}}
+                </th>
+                <th>
+                    <span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> <a
+                        href="/zone/{{name}}/active">{{name}}</a>
+                </th>
+                <td>
+                    <div class="text-right">
+                        {{#num}}{{active}}{{/num}}
+                    </div>
+                </td>
+                <td>
+                    <div class="text-right">
+                        {{#num}}{{deferred}}{{/num}}
+                    </div>
+                </td>
+                <td>
+                    <div class="text-right">
+                        {{#num}}{{counter_bounced}}{{/num}}
+                    </div>
+                </td>
+                <td>
+                    <div class="text-right">
+                        {{#num}}{{counter_delivered}}{{/num}}
+                    </div>
+                </td>
+                <td>
+                    <div class="text-right">
+                        {{#dec}}{{speed}}{{/dec}}
+                    </div>
+                </td>
+            </tr>
             {{/each}}
 
         </tbody>
@@ -142,20 +143,20 @@
 
         <tbody>
             {{#each top}}
-                <tr>
-                    <th>
-                        {{index}}
-                    </th>
-                    <td>
-                        {{domain}}
-                    </td>
-                    <td class="text-right">
-                        {{#num}}{{messages}}{{/num}}
-                    </td>
-                    <td class="text-right">
-                        {{#num}}{{share}}{{/num}}%
-                    </td>
-                </tr>
+            <tr>
+                <th>
+                    {{index}}
+                </th>
+                <td>
+                    {{domain}}
+                </td>
+                <td class="text-right">
+                    {{#num}}{{messages}}{{/num}}
+                </td>
+                <td class="text-right">
+                    {{#num}}{{share}}{{/num}}%
+                </td>
+            </tr>
             {{/each}}
         </tbody>
     </table>

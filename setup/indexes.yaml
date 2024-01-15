@@ -1,75 +1,74 @@
 ---
 indexes:
+    - collection: messages
+      index:
+          name: by_id
+          key:
+              id: 1
+              t: 1
 
-- collection: messages
-  index:
-    name: by_id
-    key:
-      id: 1
-      t: 1
+    - collection: mids
+      index:
+          unique: true
+          name: mid_id
+          key:
+              mid: 1
+              id: 1
 
-- collection: mids
-  index:
-    unique: true
-    name: mid_id
-    key:
-      mid: 1
-      id: 1
+    - collection: mids
+      index:
+          name: mid_list_id
+          key:
+              mid: 1
+              _id: 1
 
-- collection: mids
-  index:
-    name: mid_list_id
-    key:
-      mid: 1
-      _id: 1
+    - collection: mids
+      index:
+          name: mid_list_reverse
+          key:
+              mid: 1
+              _id: -1
 
-- collection: mids
-  index:
-    name: mid_list_reverse
-    key:
-      mid: 1
-      _id: -1
+    - collection: mids
+      index:
+          name: mid_by_from_id
+          key:
+              from: 1
+              _id: 1
 
-- collection: mids
-  index:
-    name: mid_by_from_id
-    key:
-      from: 1
-      _id: 1
+    - collection: mids
+      index:
+          name: mid_by_from_reverse
+          key:
+              from: 1
+              _id: -1
 
-- collection: mids
-  index:
-    name: mid_by_from_reverse
-    key:
-      from: 1
-      _id: -1
+    - collection: mids
+      index:
+          name: mid_by_to_id
+          key:
+              to: 1
+              _id: 1
 
-- collection: mids
-  index:
-    name: mid_by_to_id
-    key:
-      to: 1
-      _id: 1
+    - collection: mids
+      index:
+          name: mid_by_to_reverse
+          key:
+              to: 1
+              _id: -1
 
-- collection: mids
-  index:
-    name: mid_by_to_reverse
-    key:
-      to: 1
-      _id: -1
+    - collection: mids
+      index:
+          name: mids_autoexpire
+          # autoremove log entries after expire days
+          expireAfterSeconds: 0
+          key:
+              e: 1
 
-- collection: mids
-  index:
-    name: mids_autoexpire
-    # autoremove log entries after expire days
-    expireAfterSeconds: 0
-    key:
-      e: 1
-
-- collection: messages
-  index:
-    name: messages_autoexpire
-    # autoremove log entries after expire days
-    expireAfterSeconds: 0
-    key:
-      e: 1
+    - collection: messages
+      index:
+          name: messages_autoexpire
+          # autoremove log entries after expire days
+          expireAfterSeconds: 0
+          key:
+              e: 1

@@ -2,72 +2,75 @@
 
 <p>{{error.status}}</p>
 {{#if error.errorStack}}
-    <pre>{{error.errorStack}}</pre>
+<pre>{{error.errorStack}}</pre>
 {{/if}}
 
 {{#if error.logEntries}}
-    <div class="panel panel-default" id="logentries">
-        <!-- Default panel contents -->
-        <div class="panel-heading">
-            <div>
-                Historic log entries for {{error.logId}}
-                {{#if error.logSeq}}
-                    <span class="label label-default">{{error.logSeq}}{{#if error.seqTo}} – {{error.seqTo}}{{/if}}</span> (<a href="/message/{{error.logId}}#logentries">clear filter</a>)
-                {{/if}}
-            </div>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Entry
-                        </th>
-                        <th>
-                            Action
-                        </th>
-                        <th>
-                            Data
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each error.logEntries}}
-                        <tr>
-                            <td>
-                                <small><a href="/message/{{id}}#logentries">{{id}}</a></small><br />
-                                <small class="datestring" title="{{time}}">{{time}}</small>
-                            </td>
-                            <td>
-                                {{#if actionLabel}}
-                                    <span class="label label-{{actionLabel}}">{{action}}</span>
-                                {{else}}
-                                    {{action}}
-                                {{/if}}
-                            </td>
-                            <td class="col-md-8">
-                                <button class="btn btn-link btn-xs" type="button" data-toggle="collapse" data-target="#panel{{@index}}" aria-expanded="false" aria-controls="collapseExample">Details</button>
-                                <div id="panel{{@index}}" class="table-responsive collapse">
-                                    <table class="table table-condensed">
-                                        {{#each message}}
-                                            <tr>
-                                                <td>
-                                                    {{key}}
-                                                </td>
-                                                <td>
-                                                    <textarea class="form-control input-sm" rows="1" readonly>{{value}}</textarea>
-                                                </td>
-                                            </tr>
-                                        {{/each}}
-                                    </table>
-                                </div>
-
-                            </td>
-                        </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+<div class="panel panel-default" id="logentries">
+    <!-- Default panel contents -->
+    <div class="panel-heading">
+        <div>
+            Historic log entries for {{error.logId}}
+            {{#if error.logSeq}}
+            <span class="label label-default">{{error.logSeq}}{{#if error.seqTo}} – {{error.seqTo}}{{/if}}</span> (<a
+                href="/message/{{error.logId}}#logentries">clear filter</a>)
+            {{/if}}
         </div>
     </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Entry
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                    <th>
+                        Data
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each error.logEntries}}
+                <tr>
+                    <td>
+                        <small><a href="/message/{{id}}#logentries">{{id}}</a></small><br />
+                        <small class="datestring" title="{{time}}">{{time}}</small>
+                    </td>
+                    <td>
+                        {{#if actionLabel}}
+                        <span class="label label-{{actionLabel}}">{{action}}</span>
+                        {{else}}
+                        {{action}}
+                        {{/if}}
+                    </td>
+                    <td class="col-md-8">
+                        <button class="btn btn-link btn-xs" type="button" data-toggle="collapse"
+                            data-target="#panel{{@index}}" aria-expanded="false"
+                            aria-controls="collapseExample">Details</button>
+                        <div id="panel{{@index}}" class="table-responsive collapse">
+                            <table class="table table-condensed">
+                                {{#each message}}
+                                <tr>
+                                    <td>
+                                        {{key}}
+                                    </td>
+                                    <td>
+                                        <textarea class="form-control input-sm" rows="1" readonly>{{value}}</textarea>
+                                    </td>
+                                </tr>
+                                {{/each}}
+                            </table>
+                        </div>
+
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
 {{/if}}
