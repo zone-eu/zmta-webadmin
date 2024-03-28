@@ -405,7 +405,7 @@ router.get('/find', (req, res, next) => {
             opts.previous = cursorValue;
         }
 
-        MongoPaging.find(db.client.collection('mids'), opts, (err, result) => {
+        MongoPaging.find(db.client.collection('mids'), opts).then((result) => {
             if (err) {
                 return next(err);
             }
