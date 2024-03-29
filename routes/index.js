@@ -433,7 +433,7 @@ router.get('/find', (req, res, next) => {
                     time: entry.t.toISOString()
                 }))
             });
-        });
+        }).catch(next);
     });
 });
 
