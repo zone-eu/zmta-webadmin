@@ -406,10 +406,6 @@ router.get('/find', (req, res, next) => {
         }
 
         MongoPaging.find(db.client.collection('mids'), opts).then((result) => {
-            if (err) {
-                return next(err);
-            }
-
             if (!result.hasPrevious) {
                 page = 1;
             }
