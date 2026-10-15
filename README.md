@@ -7,13 +7,13 @@ See screenshots [here](https://cloudup.com/c_TLoJ62sdY).
 ## Requirements
 
 1. [ZoneMTA](https://github.com/zone-eu/zone-mta)
-2. [Redis](https://redis.io/) – required for counters
+2. [Redis](https://redis.io/) 6.2 or newer – required for counters and sessions
 3. [Mongodb](https://www.mongodb.com/) – required for logs
 4. [delivery-counters](https://github.com/andris9/zonemta-delivery-counters) plugin for ZoneMTA
 
 ## Setup
 
-1. Copy this repo's files to a folder in the same server where you have installed ZoneMTA.
+1. With Node.js 22.13.0 or newer installed, copy this repo's files to a folder in the same server where you have installed ZoneMTA.
 2. Navigate to this folder and Install required dependencies by running `npm install --production`
 3. Start the web interface server with `npm start`
 4. Point your browser to http://localhost:8082
@@ -35,4 +35,8 @@ V2.0.0 handles historic logs by itself (this feature is disabled by default, set
 
 ## License
 
-European Union Public License 1.1 ([details](http://ec.europa.eu/idabc/eupl.html)) or later
+ZMTA WebAdmin is licensed under the [European Union Public License 1.2](LICENSE) or later. The [Estonian license text](LICENSE_ET) is also included.
+
+> ZMTA WebAdmin is part of the Zone Mail Suite (ZMS). Suite of programs and modules for an efficient, fast and modern email server.
+
+Copyright (c) Zone Media OÜ

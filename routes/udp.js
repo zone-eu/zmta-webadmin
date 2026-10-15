@@ -11,7 +11,7 @@ module.exports = server => {
 
         try {
             message = msgpack.decode(payload);
-        } catch (E) {
+        } catch {
             log.info('UDP', 'INVALIDMSG from=%s:%s encoded="%s"', rinfo.address, rinfo.port, payload.toString('base64'));
             return;
         }
@@ -23,16 +23,14 @@ module.exports = server => {
 
         message.t = new Date();
         message.e = new Date(message.t.getTime() + config.retention);
-        db.client.collection('messages').insertOne(message, err => {
-            if (err) {
-                log.info('UDP', 'LOGFAIL %s from=%s:%s size=%s', message.id, rinfo.address, rinfo.port, payload.length);
-                return;
-            }
-            log.verbose('UDP', 'LOGMSG %s from=%s:%s size=%s', message.id, rinfo.address, rinfo.port, payload.length);
+        db.client
+            .collection('messages')
+            .insertOne(message)
+            .then(() => {
+                log.verbose('UDP', 'LOGMSG %s from=%s:%s size=%s', message.id, rinfo.address, rinfo.port, payload.length);
 
-            if (['DROP', 'QUEUED', 'NOQUEUE'].includes(message.action) && message['message-id']) {
-                db.client.collection('mids').insertOne(
-                    {
+                if (['DROP', 'QUEUED', 'NOQUEUE'].includes(message.action) && message['message-id']) {
+                    return db.client.collection('mids').insertOne({
                         mid: (message['message-id'] || '').toString().replace(/^[<\s]+|[>\s]+$/g, ''),
                         from: (message.from || '').toString().trim().toLowerCase(),
                         to: (message.to || '')
@@ -43,14 +41,15 @@ module.exports = server => {
                         id: message.id,
                         t: message.t,
                         e: message.e
-                    },
-                    err => {
-                        if (err && err.code !== 11000) {
+                    }).catch(err => {
+                        if (err.code !== 11000) {
                             log.info('UDP', 'LOGFAIL %s from=%s:%s size=%s', message.id, rinfo.address, rinfo.port, payload.length);
                         }
-                    }
-                );
-            }
-        });
+                    });
+                }
+            })
+            .catch(() => {
+                log.info('UDP', 'LOGFAIL %s from=%s:%s size=%s', message.id, rinfo.address, rinfo.port, payload.length);
+            });
     });
 };

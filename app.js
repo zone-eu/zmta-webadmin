@@ -12,7 +12,7 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const RedisStore = require('connect-redis').default;
+const RedisStore = require('connect-redis').RedisStore;
 const flash = require('connect-flash');
 const hbs = require('hbs');
 const humanize = require('humanize');
@@ -79,16 +79,14 @@ hbs.registerHelper('flash_messages', function () {
 });
 
 hbs.registerHelper('num', function (options) {
-    // eslint-disable-line prefer-arrow-callback
     return new hbs.handlebars.SafeString(
-        humanize.numberFormat(options.fn(this), 0, ',', ' ') // eslint-disable-line no-invalid-this
+        humanize.numberFormat(options.fn(this), 0, ',', ' ')
     );
 });
 
 hbs.registerHelper('dec', function (options) {
-    // eslint-disable-line prefer-arrow-callback
     return new hbs.handlebars.SafeString(
-        humanize.numberFormat(options.fn(this), 3, ',', ' ') // eslint-disable-line no-invalid-this
+        humanize.numberFormat(options.fn(this), 3, ',', ' ')
     );
 });
 
@@ -111,7 +109,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(
     session({
         store: new RedisStore({
-            client: db.redis.duplicate()
+            client: db.redis
         }),
         secret: config.secret,
         saveUninitialized: false,
@@ -141,6 +139,10 @@ app.use(
 
 // make sure flash messages are available
 app.use((req, res, next) => {
+    // Express 5 leaves the body undefined when no parser handled the request.
+    if (typeof req.body === 'undefined') {
+        req.body = {};
+    }
     res.locals.flash = req.flash.bind(req);
 
     let menu = [
@@ -169,6 +171,9 @@ app.use('/', routes);
 app.use((err, req, res, next) => {
     if (!err) {
         return next();
+    }
+    if (res.headersSent) {
+        return next(err);
     }
     res.status(err.statusCode || 500);
     res.render('error', {
