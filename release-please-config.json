@@ -5,7 +5,7 @@
             "package-name": "zmta-webadmin",
             "pull-request-title-pattern": "chore${scope}: release ${version} [skip-ci]",
             "include-component-in-tag": false,
-            "draft": true,
+            "draft": false,
             "force-tag-creation": true
         }
     }
