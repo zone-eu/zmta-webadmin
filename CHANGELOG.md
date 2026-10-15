@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/zone-eu/zmta-webadmin/compare/v2.0.1...v2.1.0) (2026-10-15)
+
+
+### Features
+
+* Bump deps, rewrite code for new deps, refactor, security fixes ([#34](https://github.com/zone-eu/zmta-webadmin/issues/34)) ([4fe22a0](https://github.com/zone-eu/zmta-webadmin/commit/4fe22a0cd5c3827dacfca1308305d7120b27cd3a))
+
 ## [2.0.1](https://github.com/zone-eu/zmta-webadmin/compare/v2.0.0...v2.0.1) (2024-01-15)
 
 
