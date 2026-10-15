@@ -11,11 +11,7 @@ const host = config.host;
 
 log.level = config.log.level;
 
-db.init(err => {
-    if (err) {
-        throw err;
-    }
-
+db.init().then(() => {
     const app = require('./app'); // eslint-disable-line global-require
     app.set('port', port);
 

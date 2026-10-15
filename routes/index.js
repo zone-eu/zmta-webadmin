@@ -7,7 +7,7 @@ const db = require('../lib/db');
 const libmime = require('libmime');
 const mailsplit = require('mailsplit');
 const util = require('util');
-const SearchString = require('search-string');
+const SearchString = require('search-string').default;
 const Joi = require('joi');
 const MongoPaging = require('mongo-cursor-pagination');
 
@@ -106,11 +106,9 @@ router.get('/message/:id', (req, res, next) => {
         .collection('messages')
         .find({ id: req.params.id })
         .sort({ t: 1 })
-        .toArray((err, logEntries) => {
-            if (err) {
-                // ignore
-            }
-
+        .toArray()
+        .catch(() => [])
+        .then(logEntries => {
             logEntries = [].concat(logEntries || []).map(entry => {
                 if (seq && entry.seq && entry.seq === seq && !seqTo) {
                     seqTo = entry.to;
@@ -181,7 +179,7 @@ router.get('/message/:id', (req, res, next) => {
                 message.subject = headers.getFirst('subject');
                 try {
                     message.subject = libmime.decodeWords(message.subject);
-                } catch (E) {
+                } catch {
                     // ignore
                 }
 
@@ -233,7 +231,8 @@ router.get('/message/:id', (req, res, next) => {
 
                 res.render('message', message);
             });
-        });
+        })
+        .catch(next);
 });
 
 router.get('/log/:id/:seq', (req, res, next) => {
@@ -270,8 +269,16 @@ router.get('/log/:id/:seq', (req, res, next) => {
     });
 });
 
-router.get('/fetch/:id', (req, res) => {
-    handler.getFetchStream(req.params.id).pipe(res);
+router.get('/fetch/:id', async (req, res, next) => {
+    const { stream, headers } = await handler.getFetchStream(req.params.id);
+    for (const name of ['content-type', 'content-disposition']) {
+        if (headers.has(name)) {
+            res.set(name, headers.get(name));
+        }
+    }
+    stream.on('error', next);
+    res.on('close', () => stream.destroy());
+    stream.pipe(res);
 });
 
 router.get('/find', (req, res, next) => {
@@ -387,50 +394,50 @@ router.get('/find', (req, res, next) => {
         };
     }
 
-    db.client.collection('mids').count(filter, (err, total) => {
-        if (err) {
-            return next(err);
-        }
+    db.client
+        .collection('mids')
+        .countDocuments(filter)
+        .then(total => {
+            let opts = {
+                limit,
+                query: filter,
+                paginatedField: '_id',
+                sortAscending: false
+            };
 
-        let opts = {
-            limit,
-            query: filter,
-            paginatedField: '_id',
-            sortAscending: false
-        };
-
-        if (cursorType === 'next') {
-            opts.next = cursorValue;
-        } else if (cursorType === 'previous') {
-            opts.previous = cursorValue;
-        }
-
-        MongoPaging.find(db.client.collection('mids'), opts).then((result) => {
-            if (!result.hasPrevious) {
-                page = 1;
+            if (cursorType === 'next') {
+                opts.next = cursorValue;
+            } else if (cursorType === 'previous') {
+                opts.previous = cursorValue;
             }
 
-            res.render('message-ids', {
-                query,
-                total,
-                page,
-                limit,
-                previousCursor: result.hasPrevious ? result.previous : false,
-                previousPage: Math.max(page - 1, 1),
-                nextPage: Math.min(page + 1, Math.ceil(total / limit)) || 1,
-                nextCursor: result.hasNext ? result.next : false,
-                results: (result.results || []).map((entry, i) => ({
-                    id: entry.id,
-                    index: page * limit - limit + i + 1,
-                    from: entry.from,
-                    to: entry.to,
-                    toStr: ((entry.to && entry.to[0]) || '') + (entry.to && entry.to.length > 1 ? ' +' + (entry.to.length - 1) + ' more…' : ''),
-                    mid: '<' + entry.mid + '>',
-                    time: entry.t.toISOString()
-                }))
+            return MongoPaging.find(db.client.collection('mids'), opts).then(result => {
+                if (!result.hasPrevious) {
+                    page = 1;
+                }
+
+                res.render('message-ids', {
+                    query,
+                    total,
+                    page,
+                    limit,
+                    previousCursor: result.hasPrevious ? result.previous : false,
+                    previousPage: Math.max(page - 1, 1),
+                    nextPage: Math.min(page + 1, Math.ceil(total / limit)) || 1,
+                    nextCursor: result.hasNext ? result.next : false,
+                    results: (result.results || []).map((entry, i) => ({
+                        id: entry.id,
+                        index: page * limit - limit + i + 1,
+                        from: entry.from,
+                        to: entry.to,
+                        toStr: ((entry.to && entry.to[0]) || '') + (entry.to && entry.to.length > 1 ? ' +' + (entry.to.length - 1) + ' more…' : ''),
+                        mid: '<' + entry.mid + '>',
+                        time: entry.t.toISOString()
+                    }))
+                });
             });
-        }).catch(next);
-    });
+        })
+        .catch(next);
 });
 
 router.get('/send', (req, res) => {
