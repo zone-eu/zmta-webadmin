@@ -24,7 +24,7 @@
         "express-session": "1.19.0",
         "hbs": "4.3.1",
         "humanize": "0.0.9",
-        "joi": "18.2.9",
+        "joi": "18.3.1",
         "js-yaml": "5.4.3",
         "libmime": "5.4.8",
         "mailsplit": "5.4.6",
